@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;600&display=swap');
+
+:root{
+  --mainColor: #2e4637;
+  --mainColorL: hsl(148, 15%, 44%);
+  --mainColorD: #1a3f0c;
+  --secondaryColor: #3a6cd8;
+  --textColor: #eee;
+
+}
+
+
+
+.nav-container{
+  font-size: xx-large;
+  margin-right: 2rem;
+  margin-left: 2rem;
+  max-width: 100%;
+}
+.navbar-icons{
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+}
+.nav-icon{
+  color: var(--mainColorL);
+  
+}
+.cart-icon{
+  background-color: var(--mainColorL);
+  color: var(--textColor);
+  border: var(--mainColorL);
+  margin-left: 2rem;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.logo{
+  width: 60px;
+  height: 60px;
+  min-height: 10px;
+  min-width: 10px;
+  margin-right: auto;
+}

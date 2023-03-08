@@ -1,0 +1,38 @@
+.hero-image{
+    width: 100%;
+}
+.hero{
+    display: flex;
+    width: 100vw;
+    height: 60vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: url("/flat-lay-vegetables-white-background-food-diet-concept.jpg");
+    background-position: center;
+    background-repeat:no-repeat ;
+    background-size: cover;
+}
+.card-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.card-wrapper > *{
+    margin-left: 15px;
+    text-align: center;
+}
+h1{
+    background-color: rgba(255,255,255,.5);
+    padding: 10px;
+    color: black;
+    font-weight: bold;
+}
+
+.hero > img{
+    height: 12vh;
+    margin-bottom: 20px;
+    background-color: rgba(255,255,255,.7);
+    padding: 2px;
+}

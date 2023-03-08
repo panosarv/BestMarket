@@ -1,0 +1,20 @@
+.mainstore{
+    padding: 40px 0px 40px 40px;
+ 
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    max-width:100vw
+    
+}
+.products-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    flex-direction: column;
+    padding-top: 10px;
+}
+.items-wrapper{
+    margin-top: 50px;
+}

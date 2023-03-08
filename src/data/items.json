@@ -1,0 +1,34 @@
+[
+    {   
+        "id":1,
+        "name":"Dozen Eggs",
+        "price":9.99,
+        "discount":0.1,
+        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
+        "image":"/images/eggs.jpg"
+    },
+    {
+        "id":2,
+        "name":"Milk Jug",
+        "price":9.99,
+        "discount":0.1,
+        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
+        "image":"/images/milk.jpg"
+    },
+    {
+        "id":3,
+        "name":"Oranges",
+        "price":9.99,
+        "discount":0.1,
+        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
+        "image":"/images/oranges.jpg"
+    },
+    {
+        "id":4,
+        "name":"Sirloin Cut",
+        "price":9.99,
+        "discount":0.1,
+        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
+        "image":"/images/meat.jpg"
+    }
+]
