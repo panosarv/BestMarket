@@ -1,51 +1,58 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
+import '../styles/Checkout.css'
+import WeatherConditions from '../components/WeatherCondtions';
 
 function Checkout() {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState('');
 
-  const handleOptionChange = ():  => {
-    setSelectedOption(target.value);
+  const handleOptionChange = (event)  => {
+    setSelectedOption(event.target.value);
   };
 
   return (
-    <div>
-      <label>Car</label>
-      <br />
-      <input
-        type="radio"
-        id="car"
-        value="car"
-        checked={selectedOption === 'car'}
-        onChange={handleOptionChange}
-      />
-      <label htmlFor="public">Motocycle</label>
-      <br />
-      <input
-        type="radio"
-        id="motocycle"
-        value="Motocycle"
-        checked={selectedOption === 'motocycle'}
-        onChange={handleOptionChange}
-      />
-      <label htmlFor="foot">By foot</label>
-      <br />
-      <input
-        type="radio"
-        id="foot"
-        value="foot"
-        checked={selectedOption === 'foot'}
-        onChange={handleOptionChange}
-      />
-      <label htmlFor="car">Public transportation</label>
-      <br />
-      <input
-        type="radio"
-        id="public"
-        value="public"
-        checked={selectedOption === 'public'}
-        onChange={handleOptionChange}
-      />
+    <>
+    <div className="radio-container">
+      <div>
+        <label style={{marginRight: '3px'}} htmlFor='car'>Car</label>
+        <input
+          type="radio"
+          id="car"
+          value="car"
+          checked={selectedOption === 'car'}
+          onChange={handleOptionChange}
+        />
+        <br/>
+        <label style={{marginRight: '3px'}} htmlFor="motocycle">Motocycle</label>
+        <input
+          type="radio"
+          id="motocycle"
+          value="motocycle"
+          checked={selectedOption === 'motocycle'}
+          onChange={handleOptionChange}
+        />
+      <br/>
+        <label style={{marginRight: '3px'}} htmlFor="foot">By foot</label>
+        <input
+          type="radio"
+          id="foot"
+          value="foot"
+          checked={selectedOption === 'foot'}
+          onChange={handleOptionChange}
+        />
+        <br/>
+        <label style={{marginRight: '3px'}} htmlFor="public">Public transportation</label>
+        <input
+          type="radio"
+          id="public"
+          value="public"
+          checked={selectedOption === 'public'}
+          onChange={handleOptionChange}
+        />
+      </div>
     </div>
+ 
+    <WeatherConditions />
+    </>
   );
 }
 
