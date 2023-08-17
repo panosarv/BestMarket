@@ -2,34 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMap,Marker,Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import '../styles/WeatherConditions.css'
-
+import useGeolocation from '../hooks/useGeolocation';
 
 function WeatherConditions() {
-  const [location, setLocation] = useState('');
   const [condition, setCondition] = useState('');
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUserLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            const concatCords = `${latitude},${longitude}`;
-            setLocation(concatCords);
-            console.log("Location",location)
-          },
-          (error) => {
-            console.error('Error getting user location:', error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
-    };
-
-    fetchUserLocation();
-  }, []);
+  const location = useGeolocation();
+  const concatLocation = location.coordinates.lat + ',' + location.coordinates.lng;
 
   useEffect(() => {
     const fetchWeatherConditions = async () => {
@@ -37,7 +16,7 @@ function WeatherConditions() {
 
   try {
     if(location){
-      const url = `https://weatherapi-com.p.rapidapi.com/current.json?q=${location}`;
+      const url = `https://weatherapi-com.p.rapidapi.com/current.json?q=${concatLocation}`;
       console.log('URL:',url)
       const options = {
       method: 'GET',
@@ -71,13 +50,17 @@ function WeatherConditions() {
     <div className="weather-board">
       <h2>Current Weather Conditions</h2>
       <p>{`The weather is ${condition}.`}</p>
-      <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+      {location.loaded && !location.error && (
+      <MapContainer center={[location.coordinates.lat,location.coordinates.lng]} zoom={13} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      
+      <Marker position={[location.coordinates.lat,location.coordinates.lng]}>
+
+      </Marker>
     </MapContainer>
+      )}
     </div>
   );
 }
