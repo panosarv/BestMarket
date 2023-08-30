@@ -5,7 +5,8 @@
         "price":9.99,
         "discount":0.1,
         "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/eggs.jpg"
+        "image":"/images/eggs.jpg",
+        "category":"DairyEggs"
     },
     {
         "id":2,
@@ -13,7 +14,9 @@
         "price":9.99,
         "discount":0.1,
         "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/milk.jpg"
+        "image":"/images/milk.jpg",
+        "category":"DairyEggs"
+
     },
     {
         "id":3,
@@ -21,7 +24,9 @@
         "price":9.99,
         "discount":0.1,
         "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/oranges.jpg"
+        "image":"/images/oranges.jpg",
+        "category":"HealthBeauty"
+
     },
     {
         "id":4,
@@ -29,6 +34,8 @@
         "price":9.99,
         "discount":0.1,
         "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/meat.jpg"
+        "image":"/images/meat.jpg",
+        "category":"MeatFish"
+
     }
 ]

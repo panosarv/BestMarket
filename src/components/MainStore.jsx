@@ -2,7 +2,7 @@ import "../styles/MainStore.css"
 import ProductCard from "./ProductCard";
 import {Container, Row, Col} from "react-bootstrap";
 import {Stack, Paper,IconButton} from "@mui/material"
-import items from "../data/items.json";
+import items from "../data/items.json"
 import { styled } from '@mui/material/styles';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import LiquorIcon from '@mui/icons-material/Liquor';
@@ -15,6 +15,10 @@ import Slider from '@mui/material/Slider';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import { useState } from "react";
+
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -67,32 +71,39 @@ const Item = styled(Paper)(({ theme }) => ({
   
 
 function MainStore(){
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
+    const handleCategorySelect = (category) => {
+      const newSelectedCategories = [...selectedCategories];
+      if (newSelectedCategories.includes(category)) {
+        newSelectedCategories.splice(
+          newSelectedCategories.findIndex((item) => item === category),
+          1
+        );
+      } else {
+        newSelectedCategories.push(category);
+      }
+      setSelectedCategories(newSelectedCategories);
+    };
     const steps = [
         'Add your groceries',
         'Fill aditional information',
         'Find the the best market!',
       ];
-
+    
     return(
         <Container className="mainstore">
             <Stack gap={0}>
                
-                <IconButton><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
-                <IconButton><Item><LiquorIcon/>Liquers</Item></IconButton>
-                <IconButton><Item><SetMealIcon/>Frozen</Item></IconButton>
-                <IconButton><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
-                <IconButton><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
-                <IconButton><Item><HealingIcon/>Health & Beaty</Item></IconButton>
-                <IconButton><Item><SoapIcon/>Cleaning</Item></IconButton>
-                <Item>
-                    Price Range:<hr/>
-                    <PriceRangeSlider
-                        valueLabelDisplay="auto"
-                        aria-label="pretto slider"
-                        defaultValue={20}
-                    />
-
-                </Item>
+                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #000' : 'none'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Liquers')} style={{boxShadow: selectedCategories.includes('Liquers') ? 'inset 0 0 5px #000' : 'none'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Frozen')} style={{boxShadow: selectedCategories.includes('Frozen') ? 'inset 0 0 5px #000' : 'none'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('FreshlyBaked')} style={{boxShadow: selectedCategories.includes('FreshlyBaked') ? 'inset 0 0 5px #000' : 'none'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('MeatFish')} style={{boxShadow: selectedCategories.includes('MeatFish') ? 'inset 0 0 5px #000' : 'none'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('HealthBeauty')} style={{boxShadow: selectedCategories.includes('HealthBeauty') ? 'inset 0 0 5px #000' : 'none'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Cleaning')} style={{boxShadow: selectedCategories.includes('Cleaning') ? 'inset 0 0 5px #000' : 'none'}}><Item><SoapIcon/>Cleaning</Item></IconButton>
+               
+                
             </Stack>
             
             <div className="products-wrapper">
@@ -104,13 +115,16 @@ function MainStore(){
                     ))}
                 </Stepper>
                 <div className="items-wrapper">
-                  <Row md={3} xs={1} lg={4} className="g-5">
-                      {items.map((item)=>(
-                        <Col key={item.id}><ProductCard {...item} /></Col>
+                  <Row className="g-5">
+                    {items.filter(item => {
+                      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+                      return categoryMatch;
+                    })
+                    .map((item)=>(
+                      <Col key={item.id} className="col"><ProductCard {...item} /></Col>
                     ))}
                   </Row>
                 </div>
-                
             </div>
         </Container>
 

@@ -6,6 +6,7 @@ import Account from "./pages/Account"
 import Help from "./pages/Help"
 import Navbar from './components/Navbar'
 import Checkout from './pages/Checkout'
+import ProductDetailPage from './pages/ProductDetailPage';
 import{ShoppingCartProvider} from "./context/ShoppingCartContext"
 
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/help" element={<Help />} />
           <Route path="/checkout" element={<Checkout />}/>
+          <Route path="/product/:id" element={<ProductDetailPage />}/>
         </Routes>
       </Container>
       </ShoppingCartProvider>
