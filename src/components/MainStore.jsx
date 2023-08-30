@@ -15,6 +15,10 @@ import Slider from '@mui/material/Slider';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import { useState } from "react";
+
+
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -67,23 +71,37 @@ const Item = styled(Paper)(({ theme }) => ({
   
 
 function MainStore(){
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
+    const handleCategorySelect = (category) => {
+      const newSelectedCategories = [...selectedCategories];
+      if (newSelectedCategories.includes(category)) {
+        newSelectedCategories.splice(
+          newSelectedCategories.findIndex((item) => item === category),
+          1
+        );
+      } else {
+        newSelectedCategories.push(category);
+      }
+      setSelectedCategories(newSelectedCategories);
+    };
     const steps = [
         'Add your groceries',
         'Fill aditional information',
         'Find the the best market!',
       ];
-
+    
     return(
         <Container className="mainstore">
             <Stack gap={0}>
                
-                <IconButton><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
-                <IconButton><Item><LiquorIcon/>Liquers</Item></IconButton>
-                <IconButton><Item><SetMealIcon/>Frozen</Item></IconButton>
-                <IconButton><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
-                <IconButton><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
-                <IconButton><Item><HealingIcon/>Health & Beaty</Item></IconButton>
-                <IconButton><Item><SoapIcon/>Cleaning</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{backgroundColor: selectedCategories.includes('DairyEggs') ? 'grey' : 'initial'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('Liquers')} style={{backgroundColor: selectedCategories.includes('Liquers') ? 'grey' : 'initial'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('Frozen')}style={{backgroundColor: selectedCategories.includes('Frozen') ? 'grey' : 'initial'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('FreshlyBaked')}style={{backgroundColor: selectedCategories.includes('FreshlyBaked') ? 'grey' : 'initial'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('MeatFish')}style={{backgroundColor: selectedCategories.includes('MeatFish') ? 'grey' : 'initial'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('HealthBeauty')}style={{backgroundColor: selectedCategories.includes('HealthBeauty') ? 'grey' : 'initial'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
+                <IconButton onClick={()=>handleCategorySelect('Cleaning')}style={{backgroundColor: selectedCategories.includes('Cleaning') ? 'grey' : 'initial'}}><Item><SoapIcon/>Cleaning</Item></IconButton>
                 
             </Stack>
             
@@ -96,13 +114,16 @@ function MainStore(){
                     ))}
                 </Stepper>
                 <div className="items-wrapper">
-                  <Row md={3} xs={1} lg={4} className="g-5">
-                      {items.map((item)=>(
-                        <Col key={item.id}><ProductCard {...item} /></Col>
+                  <Row className="g-5">
+                    {items.filter(item => {
+                      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+                      return categoryMatch;
+                    })
+                    .map((item)=>(
+                      <Col key={item.id} className="col"><ProductCard {...item} /></Col>
                     ))}
                   </Row>
                 </div>
-                
             </div>
         </Container>
 
