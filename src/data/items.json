@@ -1,41 +1,73 @@
 [
-    {   
-        "id":1,
-        "name":"Dozen Eggs",
-        "price":9.99,
-        "discount":0.1,
-        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/eggs.jpg",
-        "category":"DairyEggs"
+    {
+        "id": "001",
+        "name": "Dairy & Eggs",
+        "category": "DairyEggs",
+        "image": "/images/eggs.jpg",
+        "description":"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500",
+        "products": [
+            {
+                "id": "D1",
+                "name": "Golden Eggs",
+                "price": 9.99,
+                "image": "/images/eggs.jpg",
+                "supermarket": "Supermarket 1"
+            },
+            {
+                "id": "D2",
+                "name": "Milk Jug",
+                "price": 8.99,
+                "image": "/images/milk.jpg",
+                "supermarket": "Supermarket 2"
+            }
+        ]
     },
     {
-        "id":2,
-        "name":"Milk Jug",
-        "price":9.99,
-        "discount":0.1,
-        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/milk.jpg",
-        "category":"DairyEggs"
+        "id": "002",
+        "name": "Health & Beauty",
+        "category": "HealthBeauty",
+        "image": "/images/oranges.jpg",
+        "description":"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500",
 
+        "products": [
+            {
+                "id": "H1",
+                "name": "Golden Oranges",
+                "price": 9.99,
+                "image": "/images/oranges.jpg",
+                "supermarket": "Supermarket 3"
+            },
+            {
+                "id": "H2",
+                "name": "Silver Oranges",
+                "price": 8.99,
+                "image": "/images/oranges.jpg",
+                "supermarket": "Supermarket 4"
+            }
+        ]
     },
     {
-        "id":3,
-        "name":"Oranges",
-        "price":9.99,
-        "discount":0.1,
-        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/oranges.jpg",
-        "category":"HealthBeauty"
+        "id": "003",
+        "name": "Meat & Fish",
+        "category": "MeatFish",
+        "image": "/images/meat.jpg",
+        "description":"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500",
 
-    },
-    {
-        "id":4,
-        "name":"Sirloin Cut",
-        "price":9.99,
-        "discount":0.1,
-        "description":"Adipisicing amet anim et amet dolor et cillum reprehenderit reprehenderit consequat magna.",
-        "image":"/images/meat.jpg",
-        "category":"MeatFish"
-
+        "products": [
+            {
+                "id": "M1",
+                "name": "Golden Sirloin Cut",
+                "price": 9.99,
+                "image": "/images/meat.jpg",
+                "supermarket": "Supermarket 5"
+            },
+            {
+                "id": "M2",
+                "name": "Silver Sirloin Cut",
+                "price": 8.99,
+                "image": "/images/meat.jpg",
+                "supermarket": "Supermarket 6"
+            }
+        ]
     }
 ]
