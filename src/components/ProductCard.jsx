@@ -13,17 +13,11 @@ function ProductCard(props){
         increaseCartQuantity,
     }= useShoppingCart()
     const quantity=getItemQuantity(props.id)
-    let text;
-    if (props.discount!==0){
-        text=`Price: ${Math.round((props.price*(1-props.discount))*100)/100}$ DISCOUNT:${props.discount*100}%`
-    }
-    else{
-        text=`Price: ${props.price}$`
-    }
+   
 
     const navigate = useNavigate(); 
     const navigateToProductPage = () => { 
-        navigate(`/product/${props.id}`);
+        navigate(`/category/${props.category}`);
     };
 
     return(
@@ -38,7 +32,7 @@ function ProductCard(props){
                 />
                 <CardContent>
                 <Typography gutterBottom variant="h6" component="div">
-                    {props.name} : {props.price}$
+                    {props.name} 
                 </Typography>
                 <hr/>
                 

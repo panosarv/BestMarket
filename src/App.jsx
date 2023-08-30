@@ -22,7 +22,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/help" element={<Help />} />
           <Route path="/checkout" element={<Checkout />}/>
-          <Route path="/product/:id" element={<ProductDetailPage />}/>
+          <Route path="/category/:category" element={<ProductDetailPage />}/>
         </Routes>
       </Container>
       </ShoppingCartProvider>
