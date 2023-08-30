@@ -5,13 +5,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { useShoppingCart } from "../context/ShoppingCartContext"
-
+import { useNavigate } from 'react-router-dom'; // Use useHistory instead of withRouter
 
 function ProductCard(props){
     const {
         getItemQuantity,
         increaseCartQuantity,
-       
     }= useShoppingCart()
     const quantity=getItemQuantity(props.id)
     let text;
@@ -21,9 +20,14 @@ function ProductCard(props){
     else{
         text=`Price: ${props.price}$`
     }
+
+    const navigate = useNavigate(); 
+    const navigateToProductPage = () => { 
+        navigate(`/product/${props.id}`);
+    };
+
     return(
-        
-        <Card sx={{ maxWidth: 250 }}>
+        <Card sx={{ maxWidth: 250 }} onClick={navigateToProductPage}> 
             <CardActionArea>
                 <CardMedia
                 component="img"
@@ -42,7 +46,7 @@ function ProductCard(props){
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={()=>increaseCartQuantity(props.id)}>
+                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={(event)=>{event.stopPropagation(); increaseCartQuantity(props.id);}}>
                     Add to Cart
                 </Button>
             </CardActions>
@@ -50,5 +54,4 @@ function ProductCard(props){
     )
 }
 
-export default ProductCard
-
+export default ProductCard;

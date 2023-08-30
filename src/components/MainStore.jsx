@@ -2,7 +2,7 @@ import "../styles/MainStore.css"
 import ProductCard from "./ProductCard";
 import {Container, Row, Col} from "react-bootstrap";
 import {Stack, Paper,IconButton} from "@mui/material"
-import items from "../data/items.json";
+import items from "../data/items.json"
 import { styled } from '@mui/material/styles';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import LiquorIcon from '@mui/icons-material/Liquor';
@@ -95,13 +95,14 @@ function MainStore(){
         <Container className="mainstore">
             <Stack gap={0}>
                
-                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{backgroundColor: selectedCategories.includes('DairyEggs') ? 'grey' : 'initial'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('Liquers')} style={{backgroundColor: selectedCategories.includes('Liquers') ? 'grey' : 'initial'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('Frozen')}style={{backgroundColor: selectedCategories.includes('Frozen') ? 'grey' : 'initial'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('FreshlyBaked')}style={{backgroundColor: selectedCategories.includes('FreshlyBaked') ? 'grey' : 'initial'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('MeatFish')}style={{backgroundColor: selectedCategories.includes('MeatFish') ? 'grey' : 'initial'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('HealthBeauty')}style={{backgroundColor: selectedCategories.includes('HealthBeauty') ? 'grey' : 'initial'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
-                <IconButton onClick={()=>handleCategorySelect('Cleaning')}style={{backgroundColor: selectedCategories.includes('Cleaning') ? 'grey' : 'initial'}}><Item><SoapIcon/>Cleaning</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #000' : 'none'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Liquers')} style={{boxShadow: selectedCategories.includes('Liquers') ? 'inset 0 0 5px #000' : 'none'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Frozen')} style={{boxShadow: selectedCategories.includes('Frozen') ? 'inset 0 0 5px #000' : 'none'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('FreshlyBaked')} style={{boxShadow: selectedCategories.includes('FreshlyBaked') ? 'inset 0 0 5px #000' : 'none'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('MeatFish')} style={{boxShadow: selectedCategories.includes('MeatFish') ? 'inset 0 0 5px #000' : 'none'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('HealthBeauty')} style={{boxShadow: selectedCategories.includes('HealthBeauty') ? 'inset 0 0 5px #000' : 'none'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Cleaning')} style={{boxShadow: selectedCategories.includes('Cleaning') ? 'inset 0 0 5px #000' : 'none'}}><Item><SoapIcon/>Cleaning</Item></IconButton>
+               
                 
             </Stack>
             
