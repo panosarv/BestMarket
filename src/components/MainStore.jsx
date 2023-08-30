@@ -84,15 +84,7 @@ function MainStore(){
                 <IconButton><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
                 <IconButton><Item><HealingIcon/>Health & Beaty</Item></IconButton>
                 <IconButton><Item><SoapIcon/>Cleaning</Item></IconButton>
-                <Item>
-                    Price Range:<hr/>
-                    <PriceRangeSlider
-                        valueLabelDisplay="auto"
-                        aria-label="pretto slider"
-                        defaultValue={20}
-                    />
-
-                </Item>
+                
             </Stack>
             
             <div className="products-wrapper">
