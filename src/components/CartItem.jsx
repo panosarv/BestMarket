@@ -4,8 +4,19 @@ import storeItems from "../data/items.json"
 
 function CartItem(props){
     const {removeFromCart}=useShoppingCart()
-    const item = storeItems.find(item => item.id===props.id)
-    if (item==null) return null
+    let item = storeItems.find(item => item.id===props.id)
+    if(item==null){
+        for (let i = 0; i < storeItems.length; i++) {
+            const foundItem = storeItems[i].products.find(product => product.id === props.id);
+
+            if(foundItem) {
+                item = foundItem;
+                break;
+            }
+        }
+    }
+    if(item==null)return null;
+    
 
     return(
         <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
