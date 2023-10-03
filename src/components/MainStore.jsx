@@ -2,7 +2,6 @@ import "../styles/MainStore.css"
 import ProductCard from "./ProductCard";
 import {Container, Row, Col} from "react-bootstrap";
 import {Stack, Paper,IconButton} from "@mui/material"
-import items from "../data/items.json"
 import { styled } from '@mui/material/styles';
 import IcecreamIcon from '@mui/icons-material/Icecream';
 import LiquorIcon from '@mui/icons-material/Liquor';
@@ -14,7 +13,7 @@ import SoapIcon from '@mui/icons-material/Soap';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 
 
@@ -33,6 +32,17 @@ const Item = styled(Paper)(({ theme }) => ({
 
 function MainStore(){
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:3000/api/mainstore')
+            .then(response => response.json())
+            .then(data => 
+              {
+                setItems(data)
+              }
+              );
+    }, []);
 
     const handleCategorySelect = (category) => {
       const newSelectedCategories = [...selectedCategories];
@@ -56,12 +66,12 @@ function MainStore(){
         <Container className="mainstore">
             <Stack gap={0}>
                
-                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Dairy & Eggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Liquers')} style={{boxShadow: selectedCategories.includes('Liquers') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Frozen')} style={{boxShadow: selectedCategories.includes('Frozen') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('FreshlyBaked')} style={{boxShadow: selectedCategories.includes('FreshlyBaked') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>
-                <IconButton onClick={() => handleCategorySelect('MeatFish')} style={{boxShadow: selectedCategories.includes('MeatFish') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
-                <IconButton onClick={() => handleCategorySelect('HealthBeauty')} style={{boxShadow: selectedCategories.includes('HealthBeauty') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Meat & Fish')} style={{boxShadow: selectedCategories.includes('MeatFish') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><KebabDiningIcon/>Meat & Fish</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Health & Beauty')} style={{boxShadow: selectedCategories.includes('HealthBeauty') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><HealingIcon/>Health & Beauty</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Cleaning')} style={{boxShadow: selectedCategories.includes('Cleaning') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><SoapIcon/>Cleaning</Item></IconButton>
                
                 
@@ -77,12 +87,13 @@ function MainStore(){
                 </Stepper>
                 <div className="items-wrapper">
                   <Row className="g-5">
+                    
                     {items.filter(item => {
-                      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.category);
+                      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.name);
                       return categoryMatch;
                     })
                     .map((item)=>(
-                      <Col key={item.id} className="col"><ProductCard {...item} /></Col>
+                      <Col key={item.categoryid} className="col"><ProductCard {...item} /></Col>
                     ))}
                   </Row>
                 </div>
