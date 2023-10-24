@@ -11,3 +11,14 @@ export function combine(lists, combination, allCombinations,lengthOfLists) {
       combine(restLists, combination, allCombinations);
     }
   }
+
+export function calculateCostOfCart(cart,supermarketId){
+    let cost=0;
+    for (const item of cart){
+        if(item.supermarketid===supermarketId){
+            cost+=item.price;
+        }
+    }
+    return cost;
+}
+
