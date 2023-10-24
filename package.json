@@ -13,6 +13,7 @@
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "gapi": "^0.0.3",
+    "geo-distance": "^0.2.0",
     "leaflet": "^1.9.4",
     "mdb-react-ui-kit": "^5.0.0",
     "pg": "^8.11.3",

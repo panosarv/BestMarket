@@ -17,7 +17,7 @@ function Checkout() {
         <input
           type="radio"
           id="car"
-          value="car"
+          value="0"
           checked={selectedOption === 'car'}
           onChange={handleOptionChange}
         />
@@ -26,16 +26,25 @@ function Checkout() {
         <input
           type="radio"
           id="motocycle"
-          value="motocycle"
+          value="1"
           checked={selectedOption === 'motocycle'}
           onChange={handleOptionChange}
         />
-      <br/>
+        <br/>
+        <label style={{marginRight: '3px'}} htmlFor="Bike">Bike</label>
+        <input
+          type="radio"
+          id="bike"
+          value="2"
+          checked={selectedOption === 'motocycle'}
+          onChange={handleOptionChange}
+        />
+        <br/>
         <label style={{marginRight: '3px'}} htmlFor="foot">By foot</label>
         <input
           type="radio"
           id="foot"
-          value="foot"
+          value="3"
           checked={selectedOption === 'foot'}
           onChange={handleOptionChange}
         />
@@ -44,7 +53,7 @@ function Checkout() {
         <input
           type="radio"
           id="public"
-          value="public"
+          value="4"
           checked={selectedOption === 'public'}
           onChange={handleOptionChange}
         />
