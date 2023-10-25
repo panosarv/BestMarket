@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, request
-from joblib import load
+from keras.models import load_model
 import pandas as pd
 from itertools import combinations
 
 app = Flask(__name__)
 
 # Load the model
-model = load('model.joblib')
+model = load_model('model.h5')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -40,12 +40,12 @@ def predict():
     # Calculate selection scores
     scores = {}
     for idx, row in df.iterrows():
-        pair = tuple(row[['Distance1', 'Distance2', 'Cost1', 'Cost2']])
-        prediction = model.predict([pair])[0]
-        confidence = model.predict_proba([pair])[0][prediction]
+        pair = tuple(row[['Distance1', 'Distance2', 'Cost1', 'Cost2','Weather','Transport']])
+        prediction_probabilities = model.predict([pair])[0]
+        prediction = 1 if prediction_probabilities > 0.5 else 0
+        confidence = prediction_probabilities if prediction == 1 else 1 - prediction_probabilities
         selected_supermarket = row['Supermarket1'] if prediction == 0 else row['Supermarket2']
         not_selected_supermarket = row['Supermarket2'] if prediction == 0 else row['Supermarket1']
-
         if selected_supermarket not in scores:
             scores[selected_supermarket] = 0
         if not_selected_supermarket not in scores:
