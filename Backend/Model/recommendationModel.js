@@ -1,5 +1,6 @@
 import pg from 'pg';
 import geo_distance from 'geo-distance'
+import fetch from 'node-fetch';
 import {combine,calculateCostOfCart} from './recommendationModelHelper.js'
 const { Pool } = pg;
 const {Distance} = geo_distance;
@@ -16,9 +17,9 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           const { longitude, latitude } = location;
           const radiusInMeters = radius * 1000; 
           const weatherQuery = `SELECT * FROM "WeatherCondition" WHERE "code"=${weather}`;
-          const weatherWeight = (await pool.query(weatherQuery)).rows[0].weight;
+          const weatherCode = (await pool.query(weatherQuery)).rows[0].code;
           const transportQuery = `SELECT * FROM "MeansOfTransport" WHERE "code"=${meansOfTransport}`;
-          const transportWeight = (await pool.query(transportQuery)).rows[0].weight;
+          const transportCode = (await pool.query(transportQuery)).rows[0].code;
           const query = `SELECT p.*, s.*, ps.price
           FROM "Product" p
           JOIN "ProductSupermarket" ps ON p."productid" = ps."productid"
@@ -79,6 +80,29 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
             supermarketsProductsMap.set(key,sortedArray[0]);
           }
           
-          
+          const supermarkets = Array.from(supermarketsProductsMap, ([supermarketId, {cart, cost, distance}]) => ({
+            name: supermarketId,
+            cost: cost,
+            distance: distance.distance
+          }));
+      
+          // Send POST request to Flask server
+          const response = await fetch('http://localhost:5000/predict', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                  supermarkets: supermarkets,
+                  weather: weatherCode,
+                  transport: transportCode
+              })
+          });
+      
+          // Get the response data
+          const data = await response.json();
+      
+          // Return the data
+          return data;
           
       }
