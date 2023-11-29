@@ -20,10 +20,14 @@ export function ShoppingCartProvider({children}){
     const openCart=()=>setIsOpen(true)
     const closeCart=()=>setIsOpen(false)
 
-    function increaseCartQuantity(id){
+    function increaseCartQuantity(props){
+        let id=props.productid?props.productid:props.categoryid
+        let image=props.image
+        let name=props.name 
+        
         setCartItems(prevItems=>{
             if(prevItems.find(item=>item.id===id)==null){
-                return [...prevItems,{id,quantity:1}]
+                return [...prevItems,{id,name,image,quantity:1}]
             }
             else{
                 return prevItems.map(item=>{
@@ -38,7 +42,7 @@ export function ShoppingCartProvider({children}){
             
         })
         console.log("Increase")
-        console.log(cartItems)
+        console.log("CartItems:",cartItems)
     }
 
     function decreaseCartQuantity(id){
