@@ -4,10 +4,11 @@ import 'leaflet/dist/leaflet.css';
 import '../styles/WeatherConditions.css'
 import useGeolocation from '../hooks/useGeolocation';
 
-function WeatherConditions() {
+function WeatherConditions({address}) {
   const [condition, setCondition] = useState('');
   const [loading, setLoading] = useState(true);
-  const location = useGeolocation();
+  const location = useGeolocation(address);
+  console.log('location:',location)
   const concatLocation = location.coordinates.lat + ',' + location.coordinates.lng;
 
   useEffect(() => {

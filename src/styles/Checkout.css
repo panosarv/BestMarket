@@ -58,7 +58,7 @@
 
   .checkout-container{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
     margin-top: 200px; /* Adjust the margin-top value as needed */
     margin-left: auto;
