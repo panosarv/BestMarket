@@ -8,6 +8,7 @@ import { useShoppingCart } from "../context/ShoppingCartContext"
 import { useNavigate } from 'react-router-dom'; // Use useHistory instead of withRouter
 
 function ProductCard(props){
+    console.log('Product card props', props)
     const {
         getItemQuantity,
         increaseCartQuantity,
@@ -40,7 +41,7 @@ function ProductCard(props){
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={(event)=>{event.stopPropagation(); increaseCartQuantity(props.id);}}>
+                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={(event)=>{event.stopPropagation(); increaseCartQuantity(props);}}>
                     Add to Cart
                 </Button>
             </CardActions>

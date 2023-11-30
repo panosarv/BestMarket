@@ -60,7 +60,7 @@ function ProductDetailPage() {
               <div key={product.productid}>
                 <img src={product.image} alt={product.name} />
                 <h1>{product.name}</h1>
-                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={(event)=>{event.stopPropagation(); increaseCartQuantity(product.productid);}}>
+                <Button size="small" variant="contained" style={{backgroundColor:"#5f816f"}} className="add-to-cart" onClick={(event)=>{event.stopPropagation(); increaseCartQuantity(product);}}>
                   Add to Cart
                 </Button>
               </div>
