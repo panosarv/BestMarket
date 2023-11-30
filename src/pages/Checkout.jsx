@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import '../styles/Checkout.css'
 import WeatherConditions from '../components/WeatherCondtions';
+import { useShoppingCart } from "../context/ShoppingCartContext"
+import CartItem from "../components/CartItem"
+import {Stack} from "react-bootstrap"
+
 
 function Checkout() {
+  const {closeCart,cartItems,cartQuantity}=useShoppingCart()
   const [selectedOption, setSelectedOption] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [city,setCity]=useState('')
@@ -16,77 +21,100 @@ function Checkout() {
     <>
     <div className="checkout-container">
       <div className="radio-container">
-        <div>
-          <label style={{marginRight: '3px'}} htmlFor='car'>Car</label>
-          <input
-            type="radio"
-            id="car"
-            value="0"
-            checked={selectedOption === '0'}
-            onChange={handleOptionChange}
-          />
+        <h3>Choose your method of transport</h3>
+          <label className="radio-item"style={{marginRight: '3px'}} htmlFor='car'>Car
+            <input
+              type="radio"
+              id="car"
+              value="0"
+              checked={selectedOption === '0'}
+              onChange={handleOptionChange}
+            />
+          </label>
+            <br/>
+
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="motocycle">Motocycle
+            <input
+              type="radio"
+              id="motocycle"
+              value="1"
+              checked={selectedOption === '1'}
+              onChange={handleOptionChange}
+            />
+            </label>
+            <br/>
+          
+
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="Bike">Bike
+            <input
+              type="radio"
+              id="bike"
+              value="2"
+              checked={selectedOption === '2'}
+              onChange={handleOptionChange}
+            />
+          </label>
           <br/>
-          <label style={{marginRight: '3px'}} htmlFor="motocycle">Motocycle</label>
-          <input
-            type="radio"
-            id="motocycle"
-            value="1"
-            checked={selectedOption === '1'}
-            onChange={handleOptionChange}
-          />
+
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="foot">By foot
+            <input
+              type="radio"
+              id="foot"
+              value="3"
+              checked={selectedOption === '3'}
+              onChange={handleOptionChange}
+            />
+          </label>
           <br/>
-          <label style={{marginRight: '3px'}} htmlFor="Bike">Bike</label>
-          <input
-            type="radio"
-            id="bike"
-            value="2"
-            checked={selectedOption === '2'}
-            onChange={handleOptionChange}
-          />
-          <br/>
-          <label style={{marginRight: '3px'}} htmlFor="foot">By foot</label>
-          <input
-            type="radio"
-            id="foot"
-            value="3"
-            checked={selectedOption === '3'}
-            onChange={handleOptionChange}
-          />
-          <br/>
-          <label style={{marginRight: '3px'}} htmlFor="public">Public transportation</label>
-          <input
-            type="radio"
-            id="public"
-            value="4"
-            checked={selectedOption === '4'}
-            onChange={handleOptionChange}
-          />
-        </div>
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="public">Public transportation
+            <input
+              type="radio"
+              id="public"
+              value="4"
+              checked={selectedOption === '4'}
+              onChange={handleOptionChange}
+            />
+          </label>
       </div>
       {!isFormSubmitted && (
-        <form onSubmit={(e) => { e.preventDefault(); 
+        <form className="form-container" onSubmit={(e) => { e.preventDefault(); 
         setIsFormSubmitted(true);
         setAddress(e.target.elements.address.value);
         setCity(e.target.elements.city.value);
         setShippingCode(e.target.elements.shippingCode.value) }}>
+        <h3>Fill your location</h3>
+          <div>
           <label>
             Shipping Code:
-            <input type="text" name="shippingCode" />
+            <input className="form-item" type="text" name="shippingCode" />
           </label>
+        </div>
+        <div>
           <label>
             Address:
-            <input type="text" name="address" />
+            <input className="form-item" type="text" name="address" />
           </label>
+        </div>
+        <div>
           <label>
             City:
-            <input type="text" name="city" />
+            <input className="form-item" type="text" name="city" />
           </label>
-          <input type="submit" value="Submit" />
+        </div>
+        <input type="submit" value="Submit" />
         </form>
       )}
 
       {isFormSubmitted && <WeatherConditions address={`${address}, ${city}, ${shippingCode}`}/>}
-      
+      <div className="cart-container">
+        <h3>Review your cart</h3>
+        {cartItems.length===0? (<div className="text-center">Your cart is empty</div> ):(
+        <Stack gap={3}>
+              {cartItems.map(item=>
+              <CartItem key={item.id} {...item}/>)}
+        </Stack>
+        )}
+      </div>
     </div>
     </>
   );

@@ -44,7 +44,7 @@ function WeatherConditions({address}) {
   
 
   if (loading) {
-    return <div>Loading weather conditions...</div>;
+    return <div className='loading'>Loading weather conditions...</div>;
   }
 
   return (
