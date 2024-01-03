@@ -5,10 +5,10 @@ import {combine,calculateCostOfCart} from './recommendationModelHelper.js'
 const { Pool } = pg;
 const {Distance} = geo_distance;
 const pool = new Pool({
-  user: 'pngarv',
-  host: 'dpg-ck3jr4j6fquc73d29beg-a.frankfurt-postgres.render.com',
-  database: 'bestmarket_database',
-  password: 'E80fkg8MbGk3MEakP7P6ls6bzQvl3iMZ',
+  user: 'bestmarket_user',
+  host: 'dpg-cm4ccp0cmk4c73cj2ffg-a.frankfurt-postgres.render.com',
+  database: 'bestmarket',
+  password: 'x5orZW8qHOOgQMjXM6vsnMcgufl65Vni',
   port: 5432,
   ssl:true,
 });
@@ -16,16 +16,16 @@ const pool = new Pool({
 export async function getRecommendation(arrayOfItems,weather,meansOfTransport,location,radius){
           const { longitude, latitude } = location;
           const radiusInMeters = radius * 1000; 
-          const weatherQuery = `SELECT * FROM "WeatherCondition" WHERE "code"=${weather}`;
+          const weatherQuery = `SELECT * FROM WeatherCondition WHERE code=${weather}`;
           const weatherCode = (await pool.query(weatherQuery)).rows[0].code;
-          const transportQuery = `SELECT * FROM "MeansOfTransport" WHERE "code"=${meansOfTransport}`;
+          const transportQuery = `SELECT * FROM MeansOfTransport WHERE code=${meansOfTransport}`;
           const transportCode = (await pool.query(transportQuery)).rows[0].code;
           const query = `SELECT p.*, s.*, ps.price
-          FROM "Product" p
-          JOIN "ProductSupermarket" ps ON p."productid" = ps."productid"
-          JOIN "Supermarket" s ON ps."supermarketid" = s."supermarketid"
-          WHERE earth_box(ll_to_earth(${latitude}, ${longitude}), ${radiusInMeters}) @> ll_to_earth(s."longitude", s."latitude")
-          AND p."categoryid" IN (${arrayOfItems.map((item) => item.categoryid).join(',')})
+          FROM Product p
+          JOIN ProductSupermarket ps ON p.productid = ps.productid
+          JOIN Supermarket s ON ps.supermarketid = s.supermarketid
+          WHERE earth_box(ll_to_earth(${latitude}, ${longitude}), ${radiusInMeters}) @> ll_to_earth(s.longitude, s.latitude)
+          AND p.categoryid IN (${arrayOfItems.map((item) => item.categoryid).join(',')})
           `;
           const result = (await pool.query(query)).rows;
           const resultWithDistance = result.map((item) => {

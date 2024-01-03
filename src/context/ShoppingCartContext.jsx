@@ -21,13 +21,21 @@ export function ShoppingCartProvider({children}){
     const closeCart=()=>setIsOpen(false)
 
     function increaseCartQuantity(props){
-        let id=props.productid?props.productid:props.categoryid
+        let id=props.productid?String(props.productid)+String(props.categoryid):props.categoryid
+        let categoryid=props.categoryid
+        let productid=props.productid
         let image=props.image
         let name=props.name 
-        
+        let isProduct=props.productid?true:false
+
         setCartItems(prevItems=>{
             if(prevItems.find(item=>item.id===id)==null){
-                return [...prevItems,{id,name,image,quantity:1}]
+                if(isProduct){
+                    return [...prevItems,{id,productid,categoryid,isProduct,name,image,quantity:1}]
+                }
+                else{
+                    return [...prevItems,{id,categoryid,isProduct,name,image,quantity:1}]
+                }
             }
             else{
                 return prevItems.map(item=>{
