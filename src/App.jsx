@@ -8,12 +8,14 @@ import Navbar from './components/Navbar'
 import Checkout from './pages/Checkout'
 import ProductDetailPage from './pages/ProductDetailPage';
 import{ShoppingCartProvider} from "./context/ShoppingCartContext"
-
+import { WeatherContext } from './context/WeatherContext'
+import { useState } from 'react'
 
 function App() {
-
+  const [weatherData,setWeatherData]=useState({lat:null,lng:null,condition:''})
   return (
     <div className="App">
+      <WeatherContext.Provider value={{weatherData,setWeatherData}}>
       <ShoppingCartProvider>
       <Navbar />
       <Container className="main-container">
@@ -26,6 +28,7 @@ function App() {
         </Routes>
       </Container>
       </ShoppingCartProvider>
+      </WeatherContext.Provider>
       </div>
    
   )

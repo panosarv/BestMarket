@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect,useRef,useContext } from 'react';
+import { WeatherContext } from '../context/WeatherContext';
 import '../styles/Checkout.css'
 import WeatherConditions from '../components/WeatherCondtions';
 import { useShoppingCart } from "../context/ShoppingCartContext"
@@ -7,6 +8,7 @@ import {Stack} from "react-bootstrap"
 
 
 function Checkout() {
+  const {weatherData}=useContext(WeatherContext)
   const {closeCart,cartItems,cartQuantity}=useShoppingCart()
   const [selectedOption, setSelectedOption] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -16,6 +18,42 @@ function Checkout() {
   const handleOptionChange = (event)  => {
     setSelectedOption(event.target.value);
   };
+  const submitButtonRef=useRef(null);
+ 
+  useEffect(() => {
+    const handleClick = async () => {
+      const meansOfTransport = selectedOption;
+      const radius = selectedOption === '3' ? 3 : 10;
+      const {lat,lng,condition}=weatherData
+      const location = {lat,lng};
+      const arrayOfItems = cartItems;
+      const weatherCondition = condition;
+      console.log(location)
+      const response = await fetch('http://localhost:3000/api/recommendation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          arrayOfItems,
+          meansOfTransport,
+          location,
+          radius,
+          weatherCondition
+        })
+      });
+   
+      const data = await response.json();
+      console.log(data);
+    };
+    if(submitButtonRef.current)
+    submitButtonRef.current.addEventListener('click', handleClick);
+   
+    return () => {
+      if (submitButtonRef.current)
+      submitButtonRef.current.removeEventListener('click', handleClick);
+    };
+   }, [selectedOption, weatherData, city, shippingCode, cartItems]);
 
   return (
     <>
@@ -114,9 +152,11 @@ function Checkout() {
               <CartItem key={item.id} {...item}/>)}
         </Stack>
         )}
+        {isFormSubmitted && cartItems.length>0 && <button className='search-button' ref={submitButtonRef}>Search</button>}
       </div>
     </div>
     </>
+    
   );
 }
 

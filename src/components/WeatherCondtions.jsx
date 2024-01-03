@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import { MapContainer, TileLayer, useMap,Marker,Popup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import '../styles/WeatherConditions.css'
 import useGeolocation from '../hooks/useGeolocation';
-
+import { WeatherContext } from '../context/WeatherContext';
 function WeatherConditions({address}) {
   const [condition, setCondition] = useState('');
   const [loading, setLoading] = useState(true);
   const location = useGeolocation(address);
+  const {weatherData,setWeatherData}=useContext(WeatherContext)
   console.log('location:',location)
   const concatLocation = location.coordinates.lat + ',' + location.coordinates.lng;
 
@@ -30,6 +31,8 @@ function WeatherConditions({address}) {
 	    const result = await response.json();
       const currentCondition = result.current.condition.text;
       setCondition(currentCondition);
+      setWeatherData({lat:location.coordinates.lat,lng:location.coordinates.lng,condition:currentCondition})
+      console.log('weatherData:',weatherData)
       setLoading(false);
 	    console.log("Result",result);
     }
@@ -48,6 +51,7 @@ function WeatherConditions({address}) {
   }
 
   return (
+   
     <div className="weather-board">
       <h2>Current Weather Conditions</h2>
       <p>{`The weather is ${condition}.`}</p>
