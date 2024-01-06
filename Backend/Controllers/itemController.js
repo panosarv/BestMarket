@@ -1,5 +1,6 @@
 import express from 'express';
 import { getAllCategories, getItemsByCategoryId, getCategoryById } from '../Model/itemModel.js';
+import { getRecommendation } from '../Model/recommendationModel.js';
 
 const router = express.Router();
 
@@ -26,14 +27,13 @@ router.get("/api/category/:id", async (req, res) => {
 
 router.post("/api/recommendation", async (req, res) => {
   const { arrayOfItems, weather, meansOfTransport, location, radius } = req.body;
-  console.log("req.body", req.body);  
-  // try {
-  //     const recommendation = await getRecommendation(arrayOfItems, weather, meansOfTransport, location, radius);
-  //     res.json(recommendation);
-  // } catch (err) {
-  //     console.error(err);
-  //     res.status(500).json({ error: 'An error occurred while getting recommendations' });
-  // }
+  try {
+      const recommendation = await getRecommendation(arrayOfItems, weather, meansOfTransport, location, radius);
+      res.json(recommendation);
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'An error occurred while getting recommendations' });
+  }
 });
 
 router.get("/api/product/:id", async (req, res) => {

@@ -1,6 +1,6 @@
 export function combine(lists, combination, allCombinations,lengthOfLists) {
     if (lists.length === 0) {
-      if (combination.length >= lengthOfLists) {
+      if (combination.length >= lengthOfLists && allCombinations.includes(combination) === false) {
         allCombinations.push(combination);
       }
     } else {
@@ -16,7 +16,7 @@ export function calculateCostOfCart(cart,supermarketId){
     let cost=0;
     for (const item of cart){
         if(item.supermarketid===supermarketId){
-            cost+=item.price;
+            cost+=Number(item.price);
         }
     }
     return cost;
