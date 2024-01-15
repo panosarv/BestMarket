@@ -26,9 +26,10 @@ router.get("/api/category/:id", async (req, res) => {
 });
 
 router.post("/api/recommendation", async (req, res) => {
-  const { arrayOfItems, weather, meansOfTransport, location, radius } = req.body;
+  const { arrayOfItems, weatherCondition, meansOfTransport, location, radius } = req.body;
+  console.log("req.body", req.body)
   try {
-      const recommendation = await getRecommendation(arrayOfItems, weather, meansOfTransport, location, radius);
+      const recommendation = await getRecommendation(arrayOfItems, weatherCondition, meansOfTransport, location, radius);
       res.json(recommendation);
   } catch (err) {
       console.error(err);

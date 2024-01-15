@@ -36,10 +36,10 @@ function Checkout() {
         },
         body: JSON.stringify({
           arrayOfItems,
+          weatherCondition,
           meansOfTransport,
           location,
-          radius,
-          weatherCondition
+          radius
         })
       });
    
@@ -64,7 +64,7 @@ function Checkout() {
             <input
               type="radio"
               id="car"
-              value="0"
+              value="car"
               checked={selectedOption === '0'}
               onChange={handleOptionChange}
             />
@@ -75,8 +75,8 @@ function Checkout() {
             <input
               type="radio"
               id="motocycle"
-              value="1"
-              checked={selectedOption === '1'}
+              value="motorbike"
+              checked={selectedOption === 'motorbike'}
               onChange={handleOptionChange}
             />
             </label>
@@ -87,8 +87,8 @@ function Checkout() {
             <input
               type="radio"
               id="bike"
-              value="2"
-              checked={selectedOption === '2'}
+              value="bike"
+              checked={selectedOption === 'bike'}
               onChange={handleOptionChange}
             />
           </label>
@@ -98,8 +98,8 @@ function Checkout() {
             <input
               type="radio"
               id="foot"
-              value="3"
-              checked={selectedOption === '3'}
+              value="walking"
+              checked={selectedOption === 'walking'}
               onChange={handleOptionChange}
             />
           </label>
@@ -108,8 +108,8 @@ function Checkout() {
             <input
               type="radio"
               id="public"
-              value="4"
-              checked={selectedOption === '4'}
+              value="public"
+              checked={selectedOption === 'public'}
               onChange={handleOptionChange}
             />
           </label>

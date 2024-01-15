@@ -1,7 +1,7 @@
 import pg from 'pg';
 import fetch from 'node-fetch';
 import GeoDistance from 'geo-distance';
-import {combine,calculateCostOfCart} from './recommendationModelHelper.js'
+import {combine,calculateCostOfCart,recommendSupermarket} from './recommendationModelHelper.js'
 const { Pool } = pg;
 const geoDistance = new GeoDistance();
 const pool = new Pool({
@@ -16,11 +16,9 @@ const pool = new Pool({
 export async function getRecommendation(arrayOfItems,weather,meansOfTransport,location,radius){
           const { lng, lat } = location;
           console.log("location", location)
+          console.log("weather", weather)
+          console.log("meansOfTransport", meansOfTransport)
           const radiusInMeters = radius * 1000; 
-          const weatherQuery = `SELECT * FROM WeatherCondition WHERE code=${weather}`;
-          const weatherCode = (await pool.query(weatherQuery)).rows[0].code;
-          const transportQuery = `SELECT * FROM MeansOfTransport WHERE code=${meansOfTransport}`;
-          const transportCode = (await pool.query(transportQuery)).rows[0].code;
           const query = `SELECT p.*, s.*, ps.price
           FROM Product p
           JOIN ProductSupermarket ps ON p.productid = ps.productid
@@ -91,6 +89,7 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
             distance: distance,
           }));
           console.log("supermarkets", supermarkets)
+          const recommendation = recommendSupermarket(supermarkets,weather,meansOfTransport);
           // Send POST request to Flask server
           // const response = await fetch('http://localhost:5000/predict', {
           //     method: 'POST',
@@ -108,6 +107,6 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           // const data = await response.json();
       
           // Return the data
-          return data;
+          console.log("recom:",recommendation)
           
       }
