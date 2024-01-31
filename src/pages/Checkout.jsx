@@ -29,10 +29,12 @@ function Checkout() {
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
       console.log(location)
+      console.log('Authorization', `${localStorage.getItem('accessToken')}`)
       const response = await fetch('http://localhost:3000/api/recommendation', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('accessToken')}`,
         },
         body: JSON.stringify({
           arrayOfItems,
@@ -43,7 +45,7 @@ function Checkout() {
         })
       });
    
-      const data = await response.json();
+      const data = await response
       console.log(data);
     };
     if(submitButtonRef.current)

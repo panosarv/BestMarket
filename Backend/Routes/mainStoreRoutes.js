@@ -1,6 +1,6 @@
 import express from 'express';
-import { getAllCategories, getItemsByCategoryId, getCategoryById } from '../Model/itemModel.js';
-import { getRecommendation } from '../Model/recommendationModel.js';
+import { getAllCategories, getItemsByCategoryId, getCategoryById } from '../Models/itemModel.js';
+import { getRecommendation } from '../Controllers/recommendationController.js';
 
 const router = express.Router();
 
