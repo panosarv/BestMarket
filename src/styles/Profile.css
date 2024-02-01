@@ -1,0 +1,30 @@
+.profile-page {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20%;
+   }
+   
+   .profile-page .card {
+    flex: 1;
+    margin-right: 5px; /* Adjust as needed */
+    border-right: 1px solid #ddd; /* Adjust color as needed */
+    margin-bottom: 0;
+   }
+   
+   .profile-page .card:first-child {
+    margin-left: 10px;
+   }
+   .profile-page .card:last-child {
+    margin-right: 10px;
+   }
+
+   .cart-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+  }
+  
+  /* You might need to adjust the max-height value based on your content */
+  .expanded .cart-details {
+    max-height: 500px; /* Adjust based on the content size */
+  }

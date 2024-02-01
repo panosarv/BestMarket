@@ -29,21 +29,23 @@ function Checkout() {
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
       console.log(location)
+      console.log('Authorization', `${localStorage.getItem('accessToken')}`)
       const response = await fetch('http://localhost:3000/api/recommendation', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `${localStorage.getItem('accessToken')}`,
         },
         body: JSON.stringify({
           arrayOfItems,
+          weatherCondition,
           meansOfTransport,
           location,
-          radius,
-          weatherCondition
+          radius
         })
       });
    
-      const data = await response.json();
+      const data = await response
       console.log(data);
     };
     if(submitButtonRef.current)
@@ -64,7 +66,7 @@ function Checkout() {
             <input
               type="radio"
               id="car"
-              value="0"
+              value="car"
               checked={selectedOption === '0'}
               onChange={handleOptionChange}
             />
@@ -75,8 +77,8 @@ function Checkout() {
             <input
               type="radio"
               id="motocycle"
-              value="1"
-              checked={selectedOption === '1'}
+              value="motorbike"
+              checked={selectedOption === 'motorbike'}
               onChange={handleOptionChange}
             />
             </label>
@@ -87,8 +89,8 @@ function Checkout() {
             <input
               type="radio"
               id="bike"
-              value="2"
-              checked={selectedOption === '2'}
+              value="bike"
+              checked={selectedOption === 'bike'}
               onChange={handleOptionChange}
             />
           </label>
@@ -98,8 +100,8 @@ function Checkout() {
             <input
               type="radio"
               id="foot"
-              value="3"
-              checked={selectedOption === '3'}
+              value="walking"
+              checked={selectedOption === 'walking'}
               onChange={handleOptionChange}
             />
           </label>
@@ -108,8 +110,8 @@ function Checkout() {
             <input
               type="radio"
               id="public"
-              value="4"
-              checked={selectedOption === '4'}
+              value="public"
+              checked={selectedOption === 'public'}
               onChange={handleOptionChange}
             />
           </label>

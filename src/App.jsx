@@ -7,6 +7,7 @@ import Help from "./pages/Help"
 import Navbar from './components/Navbar'
 import Checkout from './pages/Checkout'
 import ProductDetailPage from './pages/ProductDetailPage';
+import Profile from './pages/Profile'
 import{ShoppingCartProvider} from "./context/ShoppingCartContext"
 import { WeatherContext } from './context/WeatherContext'
 import { useState } from 'react'
@@ -25,6 +26,7 @@ function App() {
           <Route path="/help" element={<Help />} />
           <Route path="/checkout" element={<Checkout />}/>
           <Route path="/category/:category" element={<ProductDetailPage />}/>
+          <Route path="/profile" element={<Profile/>}/>
         </Routes>
       </Container>
       </ShoppingCartProvider>
