@@ -14,7 +14,20 @@
     background-color: var(--mainColorL);
    
   }
+  .error-message{
+    font-size: small;
+  }
 
+  .change-cursor{
+    cursor: pointer;
+  }
+  .input-checker-false{
+    background-color: rgb(245, 228, 228);
+    border-color: red;
+  }
+  .input-checker-true{
+    
+  }
   .bg-container{
     display: flex;
     justify-content: center;
