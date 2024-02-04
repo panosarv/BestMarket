@@ -1,9 +1,8 @@
 import pg from 'pg';
 import fetch from 'node-fetch';
 import GeoDistance from 'geo-distance';
-import {combine,calculateCostOfCart,recommendSupermarket} from './recommendationControllerHelper.js'
+import {combine,calculateCostOfCart,recommendSupermarket,formatSupermarketData,getDistanceFromLatLonInKm} from './recommendationControllerHelper.js'
 const { Pool } = pg;
-const geoDistance = new GeoDistance();
 const pool = new Pool({
   user: 'bestmarket_user',
   host: 'dpg-cm4ccp0cmk4c73cj2ffg-a.frankfurt-postgres.render.com',
@@ -26,11 +25,13 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           WHERE earth_box(ll_to_earth(${lng}, ${lat}), ${radiusInMeters}) @> ll_to_earth(s.longitude, s.latitude)
           AND p.categoryid IN (${arrayOfItems.map((item) => item.categoryid).join(',')})
           `;
+          
           const result = (await pool.query(query)).rows;
+          console.log('result', result )
           const resultWithDistance = result.map((item) => {
-            const { lat: itemLatitude, lng: itemLongitude } = item;
-            const itemLocation = { lat: itemLatitude, lng: itemLongitude };
-            const distance =  GeoDistance(location, itemLocation).human_readable().distance=='NaN' ? 0 : GeoDistance(location, itemLocation).human_readable().distance;
+            const itemLocation = { lat: item.latitude, lng: item.longitude };
+            const distance =  getDistanceFromLatLonInKm(location.lat, location.lng, itemLocation.lat, itemLocation.lng);
+            console.log("distance", distance)
             return { ...item, distanceFromUser: distance };
           });
           const indiviualProducts=[]
@@ -88,25 +89,23 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
             cost: cost,
             distance: distance,
           }));
-          console.log("supermarkets", supermarkets)
           const recommendation = recommendSupermarket(supermarkets,weather,meansOfTransport);
+          const predictionData = formatSupermarketData(supermarkets,weather,meansOfTransport);
           // Send POST request to Flask server
-          // const response = await fetch('http://localhost:5000/predict', {
-          //     method: 'POST',
-          //     headers: {
-          //         'Content-Type': 'application/json'
-          //     },
-          //     body: JSON.stringify({
-          //         supermarkets: supermarkets,
-          //         weather: weatherCode,
-          //         transport: transportCode
-          //     })
-          // });
-      
+          const response = await fetch('http://localhost:5000/predict', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(predictionData)
+          });
+          // Get the response data
+          const data = await response.json();
+          console.log("data", data)
+
           // // Get the response data
           // const data = await response.json();
       
           // Return the data
-          console.log("recom:",recommendation)
-          
+          return data;
       }

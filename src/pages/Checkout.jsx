@@ -44,9 +44,9 @@ function Checkout() {
           radius
         })
       });
+      const data = await response.json();
    
-      const data = await response
-      console.log(data);
+      
     };
     if(submitButtonRef.current)
     submitButtonRef.current.addEventListener('click', handleClick);
@@ -67,7 +67,7 @@ function Checkout() {
               type="radio"
               id="car"
               value="car"
-              checked={selectedOption === '0'}
+              checked={selectedOption === 'car'}
               onChange={handleOptionChange}
             />
           </label>
