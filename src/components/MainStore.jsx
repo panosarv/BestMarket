@@ -14,6 +14,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import { useState,useEffect } from "react";
+import Skeleton from '@mui/material/Skeleton';
 
 
 
@@ -33,14 +34,16 @@ const Item = styled(Paper)(({ theme }) => ({
 function MainStore(){
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [items, setItems] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
+        setIsLoading(true)
         fetch('http://localhost:3000/api/mainstore')
             .then(response => response.json())
             .then(data => 
               {
                 console.log('data',data)
                 setItems(data)
+                setIsLoading(false)
               }
               );
     }, []);
@@ -86,6 +89,20 @@ function MainStore(){
                     </Step>
                     ))}
                 </Stepper>
+                {isLoading && (
+                <div className="items-wrapper">
+                  <Stack spacing={2} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+        {/* For variant="text", adjust the height via font-size */}
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+
+                    {/* For other variants, adjust the size with `width` and `height` */}
+                    <Skeleton variant="rounded" style={{width:'70vw',height:'25vh',borderRadius:'3em'}} />
+                    <Skeleton variant="rounded" style={{width:'70vw',height:'25vh',marginTop:'2em',borderRadius:'3em'}} />
+                
+                </Stack>
+                </div>
+                )}
+                {!isLoading && (
                 <div className="items-wrapper">
                   <Row className="g-5">
                     
@@ -97,7 +114,7 @@ function MainStore(){
                       <Col key={item.categoryid} className="col"><ProductCard {...item} /></Col>
                     ))}
                   </Row>
-                </div>
+                </div>)}
             </div>
         </Container>
 

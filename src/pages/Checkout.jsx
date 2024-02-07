@@ -7,7 +7,7 @@ import CartItem from "../components/CartItem"
 import {Stack,Card} from "react-bootstrap"
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { MapContainer, TileLayer, useMap,Marker,Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap,Marker,Popup, Circle } from 'react-leaflet'
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
@@ -15,9 +15,12 @@ import { Padding } from '@mui/icons-material';
 import Rating from '@mui/material/Rating';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+import Skeleton from '@mui/material/Skeleton';
+
 
 
 function Checkout() {
+  const [isLoading, setIsLoading] = useState(false);
   const {weatherData}=useContext(WeatherContext)
   const {closeCart,cartItems,cartQuantity}=useShoppingCart()
   const [selectedOption, setSelectedOption] = useState('');
@@ -27,15 +30,17 @@ function Checkout() {
   const [recommendedSupermarkets, setRecommendedSupermarkets] = useState([]);
   const [address,setAddress]=useState('')
   const [shippingCode,setShippingCode]=useState('')
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState({});
+  const [maxFrequency, setMaxFrequency] = useState(0);
+  const [searchButtonClassName,setSearchButtonClassName]=useState('search-button')
   const handleOptionChange = (event)  => {
     setSelectedOption(event.target.value);
   };
-  const handleSupermarketClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleSupermarketClick = (event, supermarketName) => {
+    setAnchorEl({ ...anchorEl, [supermarketName]: event.currentTarget });
   };
-  const handleSupermarketClose = () => {
-    setAnchorEl(null);
+  const handleSupermarketClose = (supermarketName) => {
+    setAnchorEl({ ...anchorEl, [supermarketName]: null });
   };
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -47,14 +52,16 @@ function Checkout() {
   ];
   useEffect(() => {
     const handleClick = async () => {
+      setIsLoading(true);
+      setRecommendedSupermarkets([]);
+      setHeatmap([]);
       const meansOfTransport = selectedOption;
       const radius = selectedOption === '3' ? 3 : 10;
       const {lat,lng,condition}=weatherData
       const location = {lat,lng};
-      
+      setSearchButtonClassName('disabled-search-button')
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
-      console.log(location)
       console.log('Authorization', `${localStorage.getItem('accessToken')}`)
       const response = await fetch('http://localhost:3000/api/recommendation', {
         method: 'POST',
@@ -71,7 +78,8 @@ function Checkout() {
         })
       });
       const data = await response.json();
-      console.log(data);  
+      
+      console.log('Rec Data:',data);  
       setRecommendedSupermarkets(data);
       const heatmapResponse = await fetch('http://localhost:3000/api/heatmap', {
         method: 'POST',
@@ -84,8 +92,11 @@ function Checkout() {
         })
       });
       const heatmapData = await heatmapResponse.json();
-      console.log('heatMapData',heatmapData[0].user_lat)
+      const totalCount = heatmapData.reduce((sum, item) => sum + item.count,  0);
+      setMaxFrequency(totalCount);
       setHeatmap(heatmapData);
+      setIsLoading(false);
+      setSearchButtonClassName('search-button')
     };
     if(submitButtonRef.current)
     submitButtonRef.current.addEventListener('click', handleClick);
@@ -114,10 +125,10 @@ function Checkout() {
           </label>
             <br/>
 
-          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="motocycle">Motocycle
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="motorbike">Motocycle
             <input
               type="radio"
-              id="motocycle"
+              id="motorbike"
               value="motorbike"
               checked={selectedOption === 'motorbike'}
               onChange={handleOptionChange}
@@ -126,7 +137,7 @@ function Checkout() {
             <br/>
           
 
-          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="Bike">Bike
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="bike">Bike
             <input
               type="radio"
               id="bike"
@@ -137,10 +148,10 @@ function Checkout() {
           </label>
           <br/>
 
-          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="foot">By foot
+          <label className="radio-item" style={{marginRight: '3px'}} htmlFor="walking">By foot
             <input
               type="radio"
-              id="foot"
+              id="walking"
               value="walking"
               checked={selectedOption === 'walking'}
               onChange={handleOptionChange}
@@ -195,24 +206,36 @@ function Checkout() {
               <CartItem key={item.id} {...item}/>)}
         </Stack>
         )}
-        {isFormSubmitted && cartItems.length>0 && <button className='search-button' ref={submitButtonRef}>Search</button>}
+        {isFormSubmitted && cartItems.length>0 && <button className={searchButtonClassName} disabled={searchButtonClassName=='search-button'?false:true} ref={submitButtonRef}>Search</button>}
       </div>
     </div>
     <div style={{display:'flex'}}>
-    { recommendedSupermarkets.length && heatmap.length&&(
+    {recommendedSupermarkets.length==0 && isLoading &&
+    <Stack spacing={2} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+        {/* For variant="text", adjust the height via font-size */}
+        <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+
+        {/* For other variants, adjust the size with `width` and `height` */}
+        <Skeleton variant="rounded" style={{width:'90vw',height:'25vh',borderRadius:'3em'}} />
+        <Skeleton variant="rounded" style={{width:'90vw',height:'25vh',marginTop:'2em',borderRadius:'3em'}} />
+    
+     </Stack>}
+    { recommendedSupermarkets.length>0 && heatmap.length>0&&(
       <div className='recommendation-container'>
         <h3>Recommended Supermarkets</h3>
           
           <div className="col supermarket-cards-container">
             {recommendedSupermarkets.map((supermarket) => (
               <div>
-              <div className="row-md-3 mb-3 change-cursor supermarket-recommendation-container" key={supermarket.supermarketId}>
-                <Card style={{ width: '10rem' }} onClick={handleSupermarketClick}>
+              <div className="row-md-3 mb-3 mt-3 change-cursor supermarket-recommendation-container" style={{width:'32vw'}} key={supermarket.supermarketid}>
+                <Card  style={{width:'50vw'}}onClick={(event)=>handleSupermarketClick(event,supermarket.category)}>
                   <Card.Img variant="top" src={supermarket.image} alt={supermarket.name} />
                   
                 </Card>
-                <div style={{backgroundColor:'white'}}>
-                  <div style={{display:'flex'}}>
+                <div style={{backgroundColor:'white',width:'100vw',paddingLeft:'2em'}}>
+                  <div style={{display:'flex',flexDirection:'column'}}>
+                    <Card.Title>{supermarket.name}</Card.Title>
+                    <Card.Text>Cost: {Math.round(supermarket.cost *  100) /  100} E</Card.Text>
                   Rating:<Rating name="read-only" value={supermarket.rating} readOnly precision={0.1}/>
                   </div>
 
@@ -221,18 +244,18 @@ function Checkout() {
                 </div>
                 
 
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleSupermarketClose}
+              <Popover
+                  id={`popover-${supermarket.category}`}
+                  open={Boolean(anchorEl[supermarket.category])}
+
+                  anchorEl={anchorEl[supermarket.category]}
+                  onClose={() => handleSupermarketClose(supermarket.category)}
                   anchorOrigin={{
                     vertical: 'mid',
                     horizontal: 'right',
                   }}
                 >
-              <Typography sx={{ p: 2 }}>Name: {supermarket.name} Rating:{supermarket.rating}, Cost:{supermarket.cost}, </Typography>
-              <MapContainer center={[supermarket.latitude,supermarket.longitude]} zoom={13} scrollWheelZoom={false}>
+              <MapContainer style={{width:'25vw'}}center={[supermarket.latitude,supermarket.longitude]} zoom={13} scrollWheelZoom={false}>
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -252,7 +275,7 @@ function Checkout() {
               
               
               </div>
-              <Divider style={{width:'50vw'}}>
+              <Divider style={{width:'100%'}}>
                   <Chip label={supermarket.category} size='small' />
                 </Divider>
               </div>
@@ -261,30 +284,39 @@ function Checkout() {
         
       </div>
       )}
-    <Divider  orientation='vertical' flexItem >
-      <Chip label="Recommended Supermarkets" size='small' orientation='vertocal' />
-    </Divider>
-    {heatmap.length && <MapContainer center={[heatmap[0].user_lat,heatmap[0].user_lng]} zoom={13} scrollWheelZoom={false} style={{width:'50vw',marginRight:'2em'}}>
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={[heatmap[0].user_lat,heatmap[0].user_lng]}>
-                    <Popup>
-                      Your location
-                    </Popup>
-                  </Marker>
-                  {heatmap.map((item) => {
-                    return (
-                      <Marker position={[item.lat, item.lng]} style={{color:'red'}}>
-                        <Popup>
-                          {`Supermarket count: ${item.count}`}
-                        </Popup>
-                      </Marker>
-                    );
-                  })
-                }
+    {heatmap.length>0 && 
+    <div style={{display:'flex'}}>
+      <Divider  orientation='vertical' flexItem >
+        <Chip label="Analytics" size='small' orientation='vertocal' />
+      </Divider>
+      <div style={{display:'flex',flexDirection:'column',justifyContent:'flex-start',alignItems:'center'}}>
+      <h3 style={{marginTop:'3vh'}}>Previous Recommendations:</h3>
+      <MapContainer center={[heatmap[0].user_lat,heatmap[0].user_lng]} zoom={13} scrollWheelZoom={false} style={{width:'50vw',marginRight:'2em'}}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[heatmap[0].user_lat,heatmap[0].user_lng]}>
+          <Popup>
+            Your location
+          </Popup>
+        </Marker>
+        {heatmap.map((item) => {
+          return (
+            
+            <Circle center={[item.lat, item.lng]} pathOptions={{ color: getColorFromFrequency(item.count/maxFrequency)  }} radius={700} >
+            <Marker position={[item.lat, item.lng]}>
+              <Popup>
+                {`Supermarket frequency: ${Math.round(((item.count / maxFrequency) *  100 + Number.EPSILON) *  100) /  100}%`}
+              </Popup>
+            </Marker>
+            </Circle>
+          );
+        })
+      }
     </MapContainer>
+    </div>
+    </div>
   }
     </div>
     </div>
@@ -292,4 +324,31 @@ function Checkout() {
   );
 }
 
+function getColorFromFrequency(frequency) {
+  // Define the color spectrum with RGB values
+  const colorSpectrum = [
+    { freq:  0, color: { r:  0, g:  0, b:  255 } }, // Blue
+    { freq:  0.5, color: { r:  0, g:  255, b:  0 } }, // Green
+    { freq:  1, color: { r:  255, g:  0, b:  0 } } // Red
+  ];
+
+  // Find the two closest colors in the spectrum
+  let lowerBound = colorSpectrum.find(cs => cs.freq <= frequency);
+  let upperBound = colorSpectrum.find(cs => cs.freq >= frequency);
+
+  // Calculate the interpolation factor
+  const interpolationFactor = (frequency - lowerBound.freq) / (upperBound.freq - lowerBound.freq);
+
+  // Perform the interpolation
+  const rgbResult = {
+    r: Math.round(lowerBound.color.r + (upperBound.color.r - lowerBound.color.r) * interpolationFactor),
+    g: Math.round(lowerBound.color.g + (upperBound.color.g - lowerBound.color.g) * interpolationFactor),
+    b: Math.round(lowerBound.color.b + (upperBound.color.b - lowerBound.color.b) * interpolationFactor)
+  };
+
+  // Return the result as an RGB string
+  return `rgb(${rgbResult.r}, ${rgbResult.g}, ${rgbResult.b})`;
+}
+
 export default Checkout;
+

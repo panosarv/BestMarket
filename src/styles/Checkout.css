@@ -25,7 +25,7 @@
 .recommendation-container{
   margin-left: 2em;
   margin-right: 2em;
-  margin-top: 2em;
+  margin-top: 3vh;
   width:50vw;
 }
 .supermarket-cards-container{
@@ -109,10 +109,21 @@
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  cursor: pointer;
+  
   width: 100%;
   align-self: flex-end;
 }
 .radio-item input[type="radio"] {
   margin-left: auto;
+}
+.disabled-search-button{
+  background-color: lightgray;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 100%;
+  align-self: flex-end;
+  cursor: not-allowed !important;
+  
 }
