@@ -7,6 +7,14 @@
 
 }
 
+.supermarket-recommendation-container{
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin-top: 100px;
+
+}
 .checkout-container {
   display: flex;
   justify-content: space-between;
@@ -14,7 +22,15 @@
   background-color: #f5f5f5;
   margin-top: 100px;
 }
-
+.recommendation-container{
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 3vh;
+  width:50vw;
+}
+.supermarket-cards-container{
+  width: 20em;
+}
 .radio-container,
 .form-container{
   flex: 1;
@@ -93,10 +109,21 @@
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
-  cursor: pointer;
+  
   width: 100%;
   align-self: flex-end;
 }
 .radio-item input[type="radio"] {
   margin-left: auto;
+}
+.disabled-search-button{
+  background-color: lightgray;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 100%;
+  align-self: flex-end;
+  cursor: not-allowed !important;
+  
 }
