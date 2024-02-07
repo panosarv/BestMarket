@@ -1,16 +1,9 @@
 import pg from 'pg';
 import fetch from 'node-fetch';
-import GeoDistance from 'geo-distance';
-import {combine,calculateCostOfCart,recommendSupermarket,formatSupermarketData,getDistanceFromLatLonInKm} from './recommendationControllerHelper.js'
+import config from '../Config/dbConfig.js';
+import {combine,calculateCostOfCart,formatSupermarketData,getDistanceFromLatLonInKm} from './recommendationControllerHelper.js'
 const { Pool } = pg;
-const pool = new Pool({
-  user: 'bestmarket_user',
-  host: 'dpg-cm4ccp0cmk4c73cj2ffg-a.frankfurt-postgres.render.com',
-  database: 'bestmarket',
-  password: 'x5orZW8qHOOgQMjXM6vsnMcgufl65Vni',
-  port: 5432,
-  ssl:true,
-});
+const pool = new Pool(config);
 
 export async function getRecommendation(arrayOfItems,weather,meansOfTransport,location,radius){
           const { lng, lat } = location;
@@ -89,7 +82,6 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
             cost: cost,
             distance: distance,
           }));
-          const recommendation = recommendSupermarket(supermarkets,weather,meansOfTransport);
           const predictionData = formatSupermarketData(supermarkets,weather,meansOfTransport);
           // Send POST request to Flask server
           const response = await fetch('http://localhost:5000/predict', {
@@ -102,10 +94,60 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           // Get the response data
           const data = await response.json();
           console.log("data", data)
-
-          // // Get the response data
+          const sortedRecommendation = data.sort((a,b) => b.score - a.score);
+          const recommendationIds=sortedRecommendation.map((item) => item.supermarketId);
+          console.log("recommendationIds", recommendationIds, recommendationIds.join(',') )
+          const recommendationQurey = `SELECT * FROM Supermarket WHERE supermarketid IN (${recommendationIds.join(',')})`;
+          const recommendationResult = (await pool.query(recommendationQurey)).rows;
+          console.log("recommendationResult", recommendationResult)
+          const idIndexMapping = recommendationIds.reduce((mapping, id, index) => {
+            mapping[id] = index;
+            return mapping;
+          }, {});
+          const recommendationResultWithDetails = recommendationResult.map((supermarket) => {
+            const recommendation = supermarkets.find(item => item.name === supermarket.supermarketid);
+            return {
+              ...supermarket,
+              distance: Math.round(recommendation.distance,2)/1000,
+               // Assuming 'distance' is the property name for distance
+              cost: recommendation.cost // Assuming 'cost' is the property name for cost
+            };
+          });
+          console.log("recommendationResultWithDetails", recommendationResultWithDetails)
+          const sortedRecommendationResult = recommendationIds.map(id => recommendationResultWithDetails[idIndexMapping[id]]);
+          const nearestSupermarket = sortedRecommendationResult.sort((a,b) => a.distance - b.distance)[0].supermarketid;
+          const chepestSupermarket = sortedRecommendationResult.sort((a,b) => a.cost - b.cost)[0].supermarketid;
+          const recommendedSupermarket = sortedRecommendationResult[0]; 
+          const responseData=[];
+          sortedRecommendationResult.map((supermarket, index) => {
+            let category;
+            if (index ===  0) {
+              category = 'recommended';
+              responseData.push({
+                ...supermarket,
+                category: category
+              });
+            } if (supermarket.supermarketid === nearestSupermarket) {
+              category = 'nearest';
+              responseData.push({
+                ...supermarket,
+                category: category
+              });
+            } if (supermarket.supermarketid === chepestSupermarket) {
+              category = 'cheapest';
+              responseData.push({
+                ...supermarket,
+                category: category
+              });
+            } 
+          });
+          
+          const addHeatMapQuery=`INSERT INTO Heatmap (user_latitude,user_longitude,supermarketid,supermarket_longitude,supermarket_latitude) VALUES (${lat},${lng},${recommendedSupermarket.supermarketid},${recommendedSupermarket.longitude},${recommendedSupermarket.latitude})`;
+          const insertResult=await pool.query(addHeatMapQuery);
+          console.log("insertResult", insertResult)
           // const data = await response.json();
       
           // Return the data
-          return data;
+          console.log("responseData", responseData)
+          return responseData;
       }
