@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { Card, Button, Table } from 'react-bootstrap';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import '../styles/Profile.css';
 
 function Profile() {
@@ -39,47 +44,49 @@ function Profile() {
     </div>
     <Card className="mb-3">
     <Card.Header>Saved Carts</Card.Header>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Cart Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr onClick={() => handleCartClick(1)} className={selectedCart === 1 ? "expanded" : ""}>
-          <td>Cart 1</td>
-        </tr>
-        {selectedCart === 1 && (
-          <tr>
-            <td colSpan="1">
-              <div className="cart-details">
-                <p>Items:</p>
-                <ul>
-                  <li>Item 1</li>
-                  <li>Item 2</li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        )}
-        <tr onClick={() => handleCartClick(2)} className={selectedCart === 2 ? "expanded" : ""}>
-          <td>Cart 2</td>
-        </tr>
-        {selectedCart === 2 && (
-          <tr>
-            <td colSpan="1">
-              <div className="cart-details">
-                <p>Items:</p>
-                <ul>
-                  <li>Item 3</li>
-                  <li>Item 4</li>
-                </ul>
-              </div>
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </Table>
+    <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          Accordion 1
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          Accordion 2
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel3-content"
+          id="panel3-header"
+        >
+          Accordion Actions
+        </AccordionSummary>
+        <AccordionDetails>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+          malesuada lacus ex, sit amet blandit leo lobortis eget.
+        </AccordionDetails>
+        <AccordionActions>
+          <Button>Cancel</Button>
+          <Button>Agree</Button>
+        </AccordionActions>
+      </Accordion>
   </Card>
   </div>
  );
