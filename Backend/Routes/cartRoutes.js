@@ -5,7 +5,7 @@ const router = express.Router();
 router.post("/api/saveCart", async (req, res) => {
     const {user,cart} = req.body;
     try {
-        const items = await saveCart(user,cart);
+        const items = await saveCart(cart,user);
         res.json(items);
     } catch (err) {
         console.error(err);
@@ -23,3 +23,5 @@ router.post("/api/getCartProductsUserId/:userId", async (req, res) => {
         res.status(500).json({ error: 'An error occurred while retrieving cart' });
     }
 });
+
+export default router;

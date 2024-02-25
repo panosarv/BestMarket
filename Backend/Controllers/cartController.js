@@ -16,11 +16,13 @@ export async function getCartProductsUserId(userId) {
 }
 
 export async function saveCart(cart,user) {
-  const result = await pool.query('INSERT INTO Cart (userid,price) VALUES ($1, $2) RETURNING *', [user.id, cart.price]);
-  const cartId = result.rows[0].id;
-  for (let i = 0; i < cart.items.length; i++) {
-    const item = cart.items[i];
-    await pool.query('INSERT INTO cart_products (cartid, productid) VALUES ($1, $2, $3)', [cartId, item.productid, item.quantity]);
+  // console.log('cart:',cart);
+  // console.log('user:',user);
+  const result = await pool.query('INSERT INTO Cart (userid,price) VALUES ($1, $2) RETURNING *', [user, '-1']);
+  const cartId = result.rows[0].cartid;
+ 
+  for (let item of cart) {
+    await pool.query('INSERT INTO cart_products (cartid, productid, categoryid) VALUES ($1, $2, $3)', [cartId, item.productid, item.categoryid]);
   }
   return result.rows[0];
 }

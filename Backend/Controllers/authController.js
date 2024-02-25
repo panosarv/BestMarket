@@ -49,7 +49,7 @@ const signin = (req, res) => {
 
             if (!passwordIsValid) {
                 return res.status(401).send({
-                    accessToken: null,
+                    accesstoken: null,
                     message: "Invalid password!"
                 });
             }
@@ -62,7 +62,7 @@ const signin = (req, res) => {
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                accessToken: token
+                accesstoken: token
             });
         }
     );

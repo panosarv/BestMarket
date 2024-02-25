@@ -62,12 +62,12 @@ function Checkout() {
       setSearchButtonClassName('disabled-search-button')
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
-      console.log('Authorization', `${localStorage.getItem('accessToken')}`)
+      console.log('Authorization', `${localStorage.getItem('accesstoken')}`)
       const response = await fetch('http://localhost:3000/api/recommendation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${localStorage.getItem('accessToken')}`,
+          'Authorization': `${localStorage.getItem('accesstoken')}`,
         },
         body: JSON.stringify({
           arrayOfItems,
@@ -85,7 +85,7 @@ function Checkout() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `${localStorage.getItem('accessToken')}`,
+          'Authorization': `${localStorage.getItem('accesstoken')}`,
         },
         body: JSON.stringify({
           user_location: location

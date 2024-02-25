@@ -63,12 +63,13 @@
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
-                  'Authorization': `${localStorage.getItem('accessToken')}`,
+                  'Authorization': `${localStorage.getItem('accesstoken')}`,
               },
               body: JSON.stringify({ username, password, email }),
           });
           const data = await response.json();
-          localStorage.setItem('accessToken',data.accessToken);
+          localStorage.setItem('accesstoken',data.accesstoken);
+          localStorage.setItem('userId',data.id);
           console.log("data:",data)
           setMessage(data.message);
       } catch (error) {
