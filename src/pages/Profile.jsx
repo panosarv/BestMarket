@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Table } from 'react-bootstrap';
+import { Card, Button, Table, Stack } from 'react-bootstrap';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CartItem from "../components/CartItem"
+
 import '../styles/Profile.css';
 
 function Profile() {
@@ -76,51 +79,47 @@ useEffect(() => {
       </Card>
     </div>
     <Card className="mb-3">
-    <Card.Header>Saved Carts</Card.Header>
-    <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          Accordion 1
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          Accordion 2
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3-content"
-          id="panel3-header"
-        >
-          Accordion Actions
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-        <AccordionActions>
-          <Button>Cancel</Button>
-          <Button>Agree</Button>
-        </AccordionActions>
-      </Accordion>
-  </Card>
+        <Card.Header>Saved Carts</Card.Header>
+        {cartProducts.map((cart, index) => (
+          <Accordion key={index}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${index}-content`}
+              id={`panel${index}-header`}
+            >
+              <Typography>Cart {index + 1}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {/* Render cart items here */}
+              <Typography>
+                {/* Example: Displaying product names */}
+                <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
+                {cart.categories.map((category) => (
+                  <div>
+                    <img src={category.image} alt="item-img" style={{width:"125px",height:"75px",
+                    objectFit:"cover"}} />
+                    <div className="me-auto">
+                        <div>{category.name}
+                        </div>
+                    </div>
+                  </div>
+                ))}
+                {cart.products.map((product) => (
+                  <div>
+                  <img src={product.image} alt="item-img" style={{width:"125px",height:"75px",
+                  objectFit:"cover"}} />
+                  <div className="me-auto">
+                      <div>{product.name}
+                      </div>
+                  </div>
+                </div>
+                ))}
+                </Stack>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </Card>
   </div>
  );
 }
