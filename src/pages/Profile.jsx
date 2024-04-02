@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Table } from 'react-bootstrap';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
@@ -10,7 +10,7 @@ import '../styles/Profile.css';
 function Profile() {
  const [editMode, setEditMode] = useState(false);
  const [selectedCart, setSelectedCart] = useState(null);
-
+ const [cartProducts, setCartProducts] = useState([]);
  const handleEditClick = () => {
     setEditMode(!editMode);
  };
@@ -18,6 +18,39 @@ function Profile() {
  const handleCartClick = (cartId) => {
     setSelectedCart(selectedCart === cartId ? null : cartId);
  };
+
+ const fetchCartProducts = async () => {
+  const userId = localStorage.getItem('userId');
+  if (!userId) {
+    console.error('User ID not found in localStorage');
+    return;
+  }
+  console.log('userId:', userId)
+  try {
+    const response = await fetch('http://localhost:3000/api/getCartProductsUserId', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch cart products');
+    }
+
+    const data = await response.json();
+    console.log('data:', data);
+    setCartProducts(data); // Update state with fetched cart products
+  } catch (error) {
+    console.error('Error fetching cart products:', error);
+  }
+};
+useEffect(() => {
+  fetchCartProducts();
+}
+, []);
+
 
  return (
     <div>

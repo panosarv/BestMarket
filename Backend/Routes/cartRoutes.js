@@ -13,7 +13,7 @@ router.post("/api/saveCart", async (req, res) => {
     }
 });
 
-router.post("/api/getCartProductsUserId/:userId", async (req, res) => {
+router.post("/api/getCartProductsUserId", async (req, res) => {
     const userId = req.body.userId;
     try {
         const items = await getCartProductsUserId(userId);
