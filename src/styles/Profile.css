@@ -28,3 +28,7 @@
   .expanded .cart-details {
     max-height: 500px; /* Adjust based on the content size */
   }
+
+  .drag-highlight {
+    outline: 2px solid green;
+  }   

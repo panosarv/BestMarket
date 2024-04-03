@@ -14,10 +14,77 @@ function Profile() {
  const [editMode, setEditMode] = useState(false);
  const [selectedCart, setSelectedCart] = useState(null);
  const [cartProducts, setCartProducts] = useState([]);
+ const [draggedCart, setDraggedCart] = useState(null);
+ const [isDragging, setIsDragging] = useState(false);
  const handleEditClick = () => {
     setEditMode(!editMode);
  };
+ const handleDragStart = (event, cartId) => {
+  setDraggedCart(cartId);
+  setIsDragging(true);
+};
+const handleDragEnd = () => {
+  setDraggedCart(null);
+  setIsDragging(false); // End dragging
+}
+const handleDragOver = (event) => {
+  event.preventDefault(); // Necessary to allow dropping
+};
 
+const handleDrop = (event, targetCartId) => {
+  event.preventDefault();
+  if (draggedCart !== null && draggedCart !== targetCartId) {
+    const targetCartIndex = cartProducts.findIndex((cart) => cart.cartid === targetCartId);
+    const draggedCartIndex = cartProducts.findIndex((cart) => cart.cartid === draggedCart);
+    if (targetCartIndex !== -1 && draggedCartIndex !== -1) {
+      const userConfirmationWindown = window.confirm('Are you sure you want to merge the carts?');
+      if (!userConfirmationWindown) {
+        return;
+      }
+      let updatedCategories = [...cartProducts[targetCartIndex].categories];
+      let updatedProducts = [...cartProducts[targetCartIndex].products];
+
+      // Iterate over the categories in the dragged cart
+      cartProducts[draggedCartIndex].categories.forEach(draggedCategory => {
+        // Check if the category already exists in the target cart
+        const categoryExists = updatedCategories.some(category => category.categoryid === draggedCategory.categoryid);
+
+        // If the category does not exist in the target cart, add it
+        if (!categoryExists) {
+          updatedCategories.push(draggedCategory);
+        }
+      });
+
+      // Iterate over the products in the dragged cart
+      cartProducts[draggedCartIndex].products.forEach(draggedProduct => {
+        // Check if the product already exists in the target cart
+        const productExists = updatedProducts.some(product => product.productid === draggedProduct.productid);
+
+        // If the product does not exist in the target cart, add it
+        if (!productExists) {
+          updatedProducts.push(draggedProduct);
+        }
+      });
+
+      // Update the state with the merged items
+      setCartProducts(prevCartProducts => {
+        const newCartProducts = [...prevCartProducts];
+        newCartProducts[targetCartIndex] = {
+          ...newCartProducts[targetCartIndex],
+          categories: updatedCategories,
+          products: updatedProducts,
+        };
+
+        // Optionally, remove the dragged cart from the state
+        // newCartProducts.splice(draggedCartIndex, 1);
+
+        return newCartProducts;
+      });
+    }
+ }
+  setDraggedCart(null); // Reset the dragged cart
+  setIsDragging(false); // End dragging
+};
  const handleCartClick = (cartId) => {
     setSelectedCart(selectedCart === cartId ? null : cartId);
  };
@@ -81,7 +148,14 @@ useEffect(() => {
     <Card className="mb-3">
         <Card.Header>Saved Carts</Card.Header>
         {cartProducts.map((cart, index) => (
-          <Accordion key={index}>
+          <Accordion key={index}
+          draggable
+          onDragStart={(event) => handleDragStart(event, cart.cartid)}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          onDrop={(event) => handleDrop(event, cart.cartid)}
+          className={isDragging && cart.cartid !== draggedCart ? 'drag-highlight' : ''} // Conditionally apply class
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${index}-content`}
