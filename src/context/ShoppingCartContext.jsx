@@ -77,6 +77,10 @@ export function ShoppingCartProvider({children}){
         })
     }
 
+    function clearCart(){
+        setCartItems([])
+    }
+
     return(
     <ShoppingCartContext.Provider value={{
                 getItemQuantity,
@@ -86,7 +90,8 @@ export function ShoppingCartProvider({children}){
                 cartItems,
                 cartQuantity,
                 closeCart,
-                openCart
+                openCart,
+                clearCart
                 }}>
         <ShoppingCart isOpen={isOpen}/>
         {children}

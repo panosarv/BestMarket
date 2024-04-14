@@ -6,8 +6,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CartItem from "../components/CartItem"
-
+import { useShoppingCart } from "../context/ShoppingCartContext"
+import { useNavigate } from 'react-router-dom';
 import '../styles/Profile.css';
 
 function Profile() {
@@ -16,24 +16,60 @@ function Profile() {
  const [cartProducts, setCartProducts] = useState([]);
  const [draggedCart, setDraggedCart] = useState(null);
  const [isDragging, setIsDragging] = useState(false);
+ const [targetCartIndex2, setCartId] = useState(null); 
+ const {
+  getItemQuantity,
+  increaseCartQuantity,
+  clearCart,
+}= useShoppingCart()
  const handleEditClick = () => {
     setEditMode(!editMode);
  };
+
+ const navigate = useNavigate();
+
  const handleDragStart = (event, cartId) => {
   setDraggedCart(cartId);
   setIsDragging(true);
 };
+
+
 const handleDragEnd = () => {
+
+
+
   setDraggedCart(null);
   setIsDragging(false); // End dragging
+
 }
 const handleDragOver = (event) => {
   event.preventDefault(); // Necessary to allow dropping
 };
 
-const handleDrop = (event, targetCartId) => {
-  event.preventDefault();
+const updateCartInDatabase = async (updatedCart) => {
+  console.log('***********dddd*=> ',updatedCart)
+  try {
+     const response = await fetch('http://localhost:3000/api/updateCart', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({ cart: updatedCart }),
+     });
+ 
+     const data = await response.json();
+     console.log('Cart updated successfully:', data);
+  } catch (error) {
+     console.error('Error updating cart:', error);
+  }
+ };
+
+
+const handleDrop =  (event, targetCartId) => {
+  event.preventDefault ();
   if (draggedCart !== null && draggedCart !== targetCartId) {
+    setCartId(targetCartId);
+    console.log('targetCartId:',targetCartIndex2)
     const targetCartIndex = cartProducts.findIndex((cart) => cart.cartid === targetCartId);
     const draggedCartIndex = cartProducts.findIndex((cart) => cart.cartid === draggedCart);
     if (targetCartIndex !== -1 && draggedCartIndex !== -1) {
@@ -43,7 +79,6 @@ const handleDrop = (event, targetCartId) => {
       }
       let updatedCategories = [...cartProducts[targetCartIndex].categories];
       let updatedProducts = [...cartProducts[targetCartIndex].products];
-
       // Iterate over the categories in the dragged cart
       cartProducts[draggedCartIndex].categories.forEach(draggedCategory => {
         // Check if the category already exists in the target cart
@@ -68,25 +103,46 @@ const handleDrop = (event, targetCartId) => {
 
       // Update the state with the merged items
       setCartProducts(prevCartProducts => {
+        
         const newCartProducts = [...prevCartProducts];
         newCartProducts[targetCartIndex] = {
           ...newCartProducts[targetCartIndex],
           categories: updatedCategories,
           products: updatedProducts,
         };
+        // Update the cart in the database
 
         // Optionally, remove the dragged cart from the state
         // newCartProducts.splice(draggedCartIndex, 1);
 
         return newCartProducts;
+        
       });
+      const updatedCart = {
+        cartid: targetCartId,
+        categories: updatedCategories,
+        products: updatedProducts,
+      };
+      updateCartInDatabase(updatedCart);
+      console.log('cartProducts:',updatedCart)
     }
  }
   setDraggedCart(null); // Reset the dragged cart
   setIsDragging(false); // End dragging
+  
 };
  const handleCartClick = (cartId) => {
     setSelectedCart(selectedCart === cartId ? null : cartId);
+    clearCart();
+    const cart = cartProducts.find((cart) => cart.cartid === cartId);
+    const {categories, products} = cart;
+    for(let category of categories){
+      increaseCartQuantity(category);
+    }
+    for(let product of products){
+      increaseCartQuantity(product);
+    }
+    navigate('/checkout');
  };
 
  const fetchCartProducts = async () => {
@@ -153,7 +209,11 @@ useEffect(() => {
           onDragStart={(event) => handleDragStart(event, cart.cartid)}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
-          onDrop={(event) => handleDrop(event, cart.cartid)}
+          onDrop={(event) => 
+            {
+              handleDrop(event, cart.cartid)
+              console.log('cartProducts1:',cartProducts)
+            }}
           className={isDragging && cart.cartid !== draggedCart ? 'drag-highlight' : ''} // Conditionally apply class
           >
             <AccordionSummary
@@ -190,6 +250,7 @@ useEffect(() => {
                 ))}
                 </Stack>
               </Typography>
+              <Button onClick={() => handleCartClick(cart.cartid)}>Select</Button>
             </AccordionDetails>
           </Accordion>
         ))}

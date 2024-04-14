@@ -65,3 +65,49 @@ export async function saveCart(cart,user) {
   }
   return result.rows[0];
 }
+
+export async function deleteCart(cartId,userId) {
+  const result = await pool.query('DELETE FROM cart_products WHERE cartid = $1', [cartId]);
+    return result;
+}
+
+export async function updateCart(cartId, cart) {
+  const { products, categories } = cart;
+  console.log('cartIdddd',cartId)
+  let result = {
+     success: false,
+     message: '',
+    updatedCart: {
+       cartId: cartId,
+       products: [],
+       categories: []
+     }
+  };
+ 
+  try {
+     // First, delete existing cart_products entries for this cartId
+     await pool.query('DELETE FROM cart_products WHERE cartid = $1', [cartId]);
+    // Then, insert the new products into the cart_products table
+    for (let product of products) {
+      await pool.query('INSERT INTO cart_products (cartid, productid, categoryid) VALUES ($1, $2, $3)', [cartId, product.productid, product.categoryid]);
+      // Assuming you want to return the updated product list
+      result.updatedCart.products.push(product);
+    }
+
+    // Handle categories similarly, if needed
+    for (let category of categories) {
+      await pool.query('INSERT INTO cart_products (cartid, categoryid) VALUES ($1, $2)', [cartId, category.categoryid]);
+      // Assuming you want to return the updated category list
+      result.updatedCart.categories.push(category);
+    }
+  
+ 
+     result.success = true;
+     result.message = 'Cart updated successfully';
+  } catch (error) {
+     console.error('Error updating cart:', error);
+     result.message = 'An error occurred while updating the cart';
+  }
+ 
+  return result;
+ }
