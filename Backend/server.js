@@ -15,4 +15,4 @@ app.use(itemRouter);
 app.use(authRoutes);
 app.use(cartRoutes);
 
-const server = app.listen(app, port, () => console.log("Server is listening..."));
+ViteExpress.listen(app, port, () => console.log("Server is listening..."));
