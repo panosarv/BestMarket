@@ -1,6 +1,6 @@
  import "../styles/Account.css"
  import {useState} from "react"
- 
+ import {useNavigate} from "react-router-dom"
  function Account(props) {
     let [authMode, setAuthMode] = useState("signin")
     const [username, setUsername] = useState("")
@@ -14,7 +14,7 @@
     const [passwordClassName,setPasswordClassName]=useState("input-checker-true")
     const [usernameClassName,setUsernameClassName]=useState("input-checker-true")
     const [hasError, setHasError] = useState(true)
-
+    const navigateTo = useNavigate();
     const changeAuthMode = () => {
       setAuthMode(authMode === "signin" ? "signup" : "signin")
     }
@@ -54,28 +54,76 @@
         setUsernameErrorMessage('');
       }
     }
-
     const handleFormSubmit = async (event) => {
       event.preventDefault();
-      console.log("here:",JSON.stringify({ username, password, email }))
       try {
-          const response = await fetch(`http://localhost:3000/api/auth/${authMode}`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `${localStorage.getItem('accessToken')}`,
-              },
-              body: JSON.stringify({ username, password, email }),
+        // Registration logic
+        if (authMode === "signup") {
+          const response = await fetch(`http://localhost:3000/api/auth/signup`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password, email }),
           });
+  
+          
+  
           const data = await response.json();
-          localStorage.setItem('accessToken',data.accessToken);
-          console.log("data:",data)
           setMessage(data.message);
+  
+          // Automatically sign in the user after successful registration
+          await signInUser(username, password);
+        } else {
+          // Sign-in logic
+          const response = await fetch(`http://localhost:3000/api/auth/signin`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+          });
+  
+          
+  
+          const data = await response.json();
+          localStorage.setItem('accesstoken', data.accesstoken);
+          localStorage.setItem('userId', data.id);
+          setMessage(data.message);
+  
+          // Redirect to the profile page after successful sign in
+          navigateTo('/profile');
+        }
       } catch (error) {
-          console.log(error);
-          setMessage('An error occurred. Please try again.');
+        console.log(error);
+        setMessage('An error occurred. Please try again.');
       }
-  };
+   };
+   const signInUser = async (username, password) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/auth/signin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      
+
+      const data = await response.json();
+      localStorage.setItem('accesstoken', data.accesstoken);
+      localStorage.setItem('userId', data.id);
+      setMessage(data.message);
+
+      // Redirect to the profile page after successful sign in
+      navigateTo('/profile');
+    } catch (error) {
+      console.log(error);
+      setMessage('An error occurred during sign in. Please try again.');
+    }
+    };
+   
     if (authMode === "signin") {
         return (
           <div className="Auth-form-container">

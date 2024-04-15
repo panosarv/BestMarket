@@ -6,15 +6,19 @@ import {RiAccountCircleFill} from "react-icons/ri"
 import{BsPatchQuestionFill} from "react-icons/bs"
 import logo from "/favicon.png"
 import { useShoppingCart } from "../context/ShoppingCartContext"
+import { useState } from "react"
 function Navbar() {
     const {openCart,cartQuantity}=useShoppingCart()
+    const [isLoggedIn,setIsLoggedIn]=useState('/account')
+ 
     return(
         <div>
         <NavbarBs  className="fixed-top shadow-sm bg-white">
             <Container className="nav-container">
                 <Nav.Link to="/" as={NavLink}><img className="logo" src={logo} alt="bm-logo"/></Nav.Link>
                 <Nav className="ms-auto navbar-icons">
-                    <Nav.Link className="nav-icon" to="/account" as={NavLink}><RiAccountCircleFill/></Nav.Link>
+                    {localStorage.getItem('accesstoken')&&<Nav.Link className="nav-icon" to='/profile' as={NavLink}><RiAccountCircleFill/></Nav.Link>}
+                    {!localStorage.getItem('accesstoken')&&<Nav.Link className="nav-icon" to='/account' as={NavLink}><RiAccountCircleFill/></Nav.Link>}
                     <Nav.Link className="nav-icon"  to="/help" as={NavLink}><BsPatchQuestionFill/></Nav.Link>
                     <Button style={{ width: "3rem", height: "3rem", position: "relative" }} variant="outline-primary" className="cart-icon" onClick={openCart}>
                         <svg
