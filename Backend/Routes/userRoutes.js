@@ -1,6 +1,6 @@
 import express from 'express';
 import userController from '../Controllers/authController.js';
-import mdw from '../mdw/index.js';
+import mdw from '../MDW/index.js';
 const router = express.Router();
 function userRoutes(app){
     app.use(function(req, res, next) {
