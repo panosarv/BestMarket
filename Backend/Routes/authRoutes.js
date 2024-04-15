@@ -1,6 +1,6 @@
 import express from 'express';
 import authController from '../Controllers/authController.js';
-import mdw from '../mdw/index.js';
+import mdw from '../MDW/index.js';
 const router = express.Router();
 router.use(function(req, res, next) {
     res.header(
