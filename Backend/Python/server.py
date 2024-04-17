@@ -6,7 +6,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load the model
-model = load('Backend\Python\model.pkl')
+model = load('model.pkl')
 
 @app.route('/predict', methods=['POST'])
 def predict():
