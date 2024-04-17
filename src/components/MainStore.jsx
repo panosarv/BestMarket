@@ -37,7 +37,7 @@ function MainStore(){
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         setIsLoading(true)
-        fetch('http://localhost:3000/api/mainstore')
+        fetch('https://bestmarket-server.onrender.com/api/mainstore')
             .then(response => response.json())
             .then(data => 
               {

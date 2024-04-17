@@ -14,7 +14,7 @@ function ProductDetailPage() {
   useEffect(() => {
 
     if(categoryId){
-    fetch(`http://localhost:3000/api/category/${categoryId}`)
+    fetch(`https://bestmarket-server.onrender.com/api/category/${categoryId}`)
       .then(response => response.json())
       .then(data => { 
         console.log(data[0]);
@@ -27,7 +27,7 @@ function ProductDetailPage() {
   useEffect(() => {
     console.log('useEffect triggered'); // add this line to check if the hook is being triggered multiple times
     if(categoryId){
-    fetch(`http://localhost:3000/api/product/${categoryId}`)
+    fetch(`https://bestmarket-server.onrender.com/api/product/${categoryId}`)
       .then(response => response.json())
       .then(data => { 
         console.log(data);

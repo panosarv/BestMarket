@@ -20,7 +20,7 @@ function ShoppingCart({isOpen}){
         setIsLoading(true);
         setSearchButtonClassName('disabled-save-button');
         console.log('Authorization', `${localStorage.getItem('accesstoken')}`);
-        const response = await fetch('http://localhost:3000/api/saveCart', {
+        const response = await fetch('https://bestmarket-server.onrender.com/api/saveCart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

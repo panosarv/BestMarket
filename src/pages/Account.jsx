@@ -59,7 +59,7 @@
       try {
         // Registration logic
         if (authMode === "signup") {
-          const response = await fetch(`http://localhost:3000/api/auth/signup`, {
+          const response = await fetch(`https://bestmarket-server.onrender.com/api/auth/signup`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -76,7 +76,7 @@
           await signInUser(username, password);
         } else {
           // Sign-in logic
-          const response = await fetch(`http://localhost:3000/api/auth/signin`, {
+          const response = await fetch(`https://bestmarket-server.onrender.com/api/auth/signin`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -101,7 +101,7 @@
    };
    const signInUser = async (username, password) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/signin`, {
+      const response = await fetch(`https://bestmarket-server.onrender.com/api/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
