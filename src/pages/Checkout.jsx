@@ -63,7 +63,7 @@ function Checkout() {
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
       console.log('Authorization', `${localStorage.getItem('accesstoken')}`)
-      const response = await fetch('http://localhost:3000/api/recommendation', {
+      const response = await fetch('https://bestmarket-server.onrender.com/api/recommendation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ function Checkout() {
       
       console.log('Rec Data:',data);  
       setRecommendedSupermarkets(data);
-      const heatmapResponse = await fetch('http://localhost:3000/api/heatmap', {
+      const heatmapResponse = await fetch('https://bestmarket-server.onrender.com/api/heatmap', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

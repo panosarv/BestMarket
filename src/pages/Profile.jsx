@@ -49,7 +49,7 @@ const handleDragOver = (event) => {
 const updateCartInDatabase = async (updatedCart) => {
   console.log('***********dddd*=> ',updatedCart)
   try {
-     const response = await fetch('http://localhost:3000/api/updateCart', {
+     const response = await fetch('https://bestmarket-server.onrender.com/api/updateCart', {
        method: 'POST',
        headers: {
          'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ const handleDrop =  (event, targetCartId) => {
   }
   console.log('userId:', userId)
   try {
-    const response = await fetch('http://localhost:3000/api/getCartProductsUserId', {
+    const response = await fetch('https://bestmarket-server.onrender.com/api/getCartProductsUserId', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
