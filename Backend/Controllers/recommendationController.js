@@ -49,7 +49,9 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           const supermarketsProductsMap = new Map();
           combine(listsOfAllProductsPerCategory,products, allPossibleCarts, listsOfAllProductsPerCategory.length);
           allPossibleCarts.forEach((cart) => {
-            console.log("cart", cart)
+            //remove duplicate products
+            const cartSet = new Set(cart);
+            cart = Array.from(cartSet);
             const recordsOfProductSupermarketThatProductsAreInCart = resultWithDistance.filter((item) => cart.includes(item.productid));
             const supermarketIds = recordsOfProductSupermarketThatProductsAreInCart.map(item => item.supermarketid);
             const supermarketCount = supermarketIds.reduce((acc, id) => {
@@ -83,6 +85,7 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
             distance: distance,
           }));
           const predictionData = formatSupermarketData(supermarkets,weather,meansOfTransport);
+          
           // Send POST request to Flask server
           const response = await fetch('https://bestmarket-python-server.onrender.com/predict', {
               method: 'POST',
