@@ -10,9 +10,7 @@ import BakeryDiningIcon from '@mui/icons-material/BakeryDining';
 import KebabDiningIcon from '@mui/icons-material/KebabDining';
 import HealingIcon from '@mui/icons-material/Healing';
 import SoapIcon from '@mui/icons-material/Soap';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import Grid from '@mui/material/Grid'; 
 import { useState,useEffect } from "react";
 import Skeleton from '@mui/material/Skeleton';
 
@@ -68,7 +66,7 @@ function MainStore(){
     
     return(
         <Container className="mainstore">
-            <Stack gap={0}>
+            <Stack direction="row" className="filters-container" gap={0}>
                
                 <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Liquers')} style={{boxShadow: selectedCategories.includes('Liquers') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
@@ -82,20 +80,11 @@ function MainStore(){
             </Stack>
             
             <div className="products-wrapper">
-                <Stepper activeStep={0} alternativeLabel>
-                    {steps.map((label) => (
-                    <Step  key={label}>
-                        <StepLabel>{label}</StepLabel>
-                    </Step>
-                    ))}
-                </Stepper>
+                
                 {isLoading && (
                 <div className="items-wrapper">
                   <Stack spacing={2} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-        {/* For variant="text", adjust the height via font-size */}
                     <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-
-                    {/* For other variants, adjust the size with `width` and `height` */}
                     <Skeleton variant="rounded" style={{width:'70vw',height:'25vh',borderRadius:'3em'}} />
                     <Skeleton variant="rounded" style={{width:'70vw',height:'25vh',marginTop:'2em',borderRadius:'3em'}} />
                 
@@ -103,18 +92,20 @@ function MainStore(){
                 </div>
                 )}
                 {!isLoading && (
-                <div className="items-wrapper">
-                  <Row className="g-5">
-                    
-                    {items.filter(item => {
-                      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.name);
-                      return categoryMatch;
-                    })
-                    .map((item)=>(
-                      <Col key={item.categoryid} className="col"><ProductCard {...item} /></Col>
-                    ))}
-                  </Row>
-                </div>)}
+                  <div className="items-wrapper">
+                    <Grid container spacing={2}>
+                      {items.filter(item => {
+                        const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(item.name);
+                        return categoryMatch;
+                      })
+                    .map((item) => (
+                        <Grid className="extend-card-on-mobile" item xs={12} sm={6} md={4} key={item.categoryid}>
+                          <ProductCard  {...item} />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </div>
+                )}
             </div>
         </Container>
 

@@ -127,3 +127,48 @@
   cursor: not-allowed !important;
   
 }
+
+.map-container{
+  width:50vw;
+}
+
+.map-container-prev{
+  width:90vw;
+}
+
+@media screen and (max-width: 768px) {
+  .checkout-container {
+    flex-direction: column;
+  }
+  .supermarket-recommendation-container {
+    flex-direction: column;
+  }
+  .recommendation-container {
+    width: 100%;
+  }
+  .supermarket-cards-container {
+    width: 100%;
+  }
+  .radio-container,
+  .form-container,
+  .cart-container {
+    margin-top: 20px;
+  }
+  .radio-container,
+  .form-container,
+  .cart-container {
+    margin-right: 0;
+  }
+  .radio-container {
+    margin-right: 0;
+  }
+  .form-container {
+    margin-right: 0;
+  }
+  .cart-container {
+    margin-right: 0;
+  }
+  .map-container{
+    width:90vw;
+  }
+}

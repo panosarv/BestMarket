@@ -16,7 +16,7 @@
   
   .product-card{
     height:0px;
-    width:200px;
+    max-width: 400px;
   }
 
   .product-image{
@@ -25,3 +25,5 @@
     width: 100%;
     height:200px;
   }
+  
+  
