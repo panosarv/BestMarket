@@ -22,7 +22,7 @@ function ProductCard(props){
     };
 
     return(
-        <Card sx={{ maxWidth: 250 }} onClick={navigateToProductPage}> 
+        <Card sx={{ maxWidth: { xs: 'none', md: 400 } }} onClick={navigateToProductPage}> 
             <CardActionArea>
                 <CardMedia
                 component="img"

@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom"
 import { Nav } from "react-bootstrap"
 import CartItem from "./CartItem"
 import { useEffect, useRef, useState } from "react"
+
+
 const isUserLoggedIn = () => {
     const token = localStorage.getItem('accesstoken');
     return !!token;
@@ -24,12 +26,10 @@ function ShoppingCart({isOpen}){
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `${localStorage.getItem('accesstoken')}`,
+            'x-access-token': `${localStorage.getItem('accesstoken')}`,
           },
           body: JSON.stringify({
             cart: cartItems,
-            user: localStorage.getItem('userId'),
-            
           })
         });
         setSearchButtonClassName('search-button');

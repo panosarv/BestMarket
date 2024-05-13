@@ -17,6 +17,8 @@ function Profile() {
  const [draggedCart, setDraggedCart] = useState(null);
  const [isDragging, setIsDragging] = useState(false);
  const [targetCartIndex2, setCartId] = useState(null); 
+ const [isEditMode, setIsEditMode] = useState(false);
+ const [editingCart,setEditingCart] = useState([]); 
  const {
   getItemQuantity,
   increaseCartQuantity,
@@ -27,6 +29,13 @@ function Profile() {
  };
 
  const navigate = useNavigate();
+
+ const toggleEditMode = () => {
+  if(isEditMode && editingCart){
+    updateCartInDatabase(editingCart);
+  }
+  setIsEditMode(!isEditMode);
+ };
 
  const handleDragStart = (event, cartId) => {
   setDraggedCart(cartId);
@@ -47,12 +56,12 @@ const handleDragOver = (event) => {
 };
 
 const updateCartInDatabase = async (updatedCart) => {
-  console.log('***********dddd*=> ',updatedCart)
   try {
      const response = await fetch('https://bestmarket-server.onrender.com/api/updateCart', {
        method: 'POST',
        headers: {
          'Content-Type': 'application/json',
+         'x-access-token': localStorage.getItem('accesstoken')
        },
        body: JSON.stringify({ cart: updatedCart }),
      });
@@ -63,6 +72,8 @@ const updateCartInDatabase = async (updatedCart) => {
      console.error('Error updating cart:', error);
   }
  };
+
+
 
 
 const handleDrop =  (event, targetCartId) => {
@@ -131,6 +142,41 @@ const handleDrop =  (event, targetCartId) => {
   setIsDragging(false); // End dragging
   
 };
+
+const removeItemFromCart = (cartId,item) => {
+
+  console.log(item)
+  // Find the cart that needs to be updated
+  const cartToUpdate = cartProducts.find(cart => cart.cartid === cartId);
+  
+  if (cartToUpdate) {
+    
+    // Filter out the item from the cart's categories
+    if(item.productid){
+      const updatedProducts = cartToUpdate.products.filter(product => product.productid !== item.productid);
+      const updatedCart = {
+        ...cartToUpdate,
+        products: updatedProducts,
+      };
+      setCartProducts(prevCartProducts => prevCartProducts.map(cart => cart.cartid === cartId ? updatedCart : cart));
+      setEditingCart(updatedCart);
+    }
+    else{
+      const updatedCategories = cartToUpdate.categories.filter(category => category.categoryid !== item.categoryid);
+ 
+    // Update the cart with the new categories array
+      const updatedCart = {
+        ...cartToUpdate,
+        categories: updatedCategories,
+     };
+
+     setCartProducts(prevCartProducts => prevCartProducts.map(cart => cart.cartid === cartId ? updatedCart : cart));
+     setEditingCart(updatedCart);
+    }
+    // Update the state with the new cart
+  }
+ };
+
  const handleCartClick = (cartId) => {
     setSelectedCart(selectedCart === cartId ? null : cartId);
     clearCart();
@@ -157,8 +203,9 @@ const handleDrop =  (event, targetCartId) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-access-token': localStorage.getItem('accesstoken') 
       },
-      body: JSON.stringify({ userId }),
+      
     });
 
     if (!response.ok) {
@@ -179,7 +226,7 @@ useEffect(() => {
 
 
  return (
-    <div>
+  <div className='background-img'>
     <div className="profile-page">
       <Card className="mb-3">
         <Card.Header>Profile Information</Card.Header>
@@ -225,7 +272,7 @@ useEffect(() => {
             </AccordionSummary>
             <AccordionDetails>
               {/* Render cart items here */}
-              <Typography>
+              <Typography class='cart-item-container'>
                 {/* Example: Displaying product names */}
                 <Stack direction="horizontal" gap={2} className="d-flex align-items-center">
                 {cart.categories.map((category) => (
@@ -235,6 +282,9 @@ useEffect(() => {
                     <div className="me-auto">
                         <div>{category.name}
                         </div>
+                        {isEditMode && (
+                        <button className='remove-item-btn' onClick={() => removeItemFromCart(cart.cartid,category)}>X</button>
+                        )}
                     </div>
                   </div>
                 ))}
@@ -245,12 +295,20 @@ useEffect(() => {
                   <div className="me-auto">
                       <div>{product.name}
                       </div>
+                      {isEditMode && (
+                        <button className = "remove-item-btn" onClick={() => removeItemFromCart(cart.cartid,product)}>X</button>
+                        )}
                   </div>
                 </div>
                 ))}
                 </Stack>
               </Typography>
-              <Button onClick={() => handleCartClick(cart.cartid)}>Select</Button>
+              <div className='btn-container'>
+               {!isEditMode&&
+                <Button className='select-btn' onClick={() => handleCartClick(cart.cartid)}>Select</Button>
+                }
+                <Button className='edit-btn' onClick={toggleEditMode}>{isEditMode ? 'Done' : 'Edit'}</Button>
+              </div>
             </AccordionDetails>
           </Accordion>
         ))}

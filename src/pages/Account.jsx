@@ -85,15 +85,18 @@
           });
   
           
-  
+          
           const data = await response.json();
-          localStorage.setItem('accesstoken', data.accesstoken);
-          localStorage.setItem('userId', data.id);
-          setMessage(data.message);
+          if(response.ok){
+            localStorage.setItem('accesstoken', data.accesstoken);
+            localStorage.setItem('userId', data.id);
+            setMessage(data.message);
   
-          // Redirect to the profile page after successful sign in
-          navigateTo('/profile');
+            // Redirect to the profile page after successful sign in
+            navigateTo('/profile');
+          }  
         }
+
       } catch (error) {
         console.log(error);
         setMessage('An error occurred. Please try again.');
@@ -166,9 +169,7 @@
                     Submit
                   </button>
                 </div>
-                <p className="text-center mt-2">
-                  Forgot <a href="#">password?</a>
-                </p>
+                
               </div>
             </form>
             </div>
@@ -237,9 +238,7 @@
                   Submit
                 </button>
               </div>
-              <p className="text-center mt-2">
-                Forgot <a href="#">password?</a>
-              </p>
+              
             </div>
           </form>
           </div>

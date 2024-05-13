@@ -1,11 +1,8 @@
-:root{
-    --mainColor: #2e4637;
-    --mainColorL: hsl(148, 15%, 44%);
-    --mainColorD: #1a3f0c;
-    --secondaryColor: #3a6cd8;
-    --textColor: #eee;
-  
+  .btn-primary {
+    background-color: var(--mainColor);
+    border-color: var(--mainColor);
   }
+
   .Auth-form-container {
     display: flex;
     justify-content: center;
@@ -36,6 +33,7 @@
     background-color: var(--textColor);
     border-radius: 20px;
     box-shadow: #000;
+    margin-top: 2.5em;
   }
 
   .login-img{
@@ -88,4 +86,25 @@
     font-size: 14px;
     font-weight: 600;
     color: rgb(34, 34, 34);
+  }
+
+  @media screen and (max-width: 768px) {
+    .Auth-form-container {
+      display:flex;
+      justify-content: center;
+      align-items: center;
+      width: 90;
+      background: rgb(95,129,111);
+      background: radial-gradient(circle, rgba(95,129,111,1) 36%, rgba(26,63,12,1) 100%);
+    }
+    .Auth-form {
+      width: 100%;
+    }
+    .login-img{
+      display: none;
+    }
+    .bg-container{
+      width: 90%;
+    }
+    
   }

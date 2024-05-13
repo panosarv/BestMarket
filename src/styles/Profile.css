@@ -32,3 +32,48 @@
   .drag-highlight {
     outline: 2px solid green;
   }   
+
+.cart-item-container{
+  margin-bottom: 1em;
+}
+
+.btn-container{
+  display: flex;
+  justify-content:center;
+
+}
+
+.background-img{
+  background: url("public/undraw_shopping_app_flsj.svg");
+  background-size: cover;
+  background-position: top left;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100%;
+  
+}
+
+.select-btn{
+  margin-right: 1em;
+  background-color: var(--mainColorL);
+  border-color: var(--mainColor);
+}
+
+.edit-btn{
+  background-color: var(--mainColorL);
+  border-color: var(--mainColor);
+}
+
+
+.remove-item-btn {
+    bottom: -10px; /* Adjust to overlap the image */
+    right: -10px; /* Adjust to overlap the image */
+    background-color: red;
+    color: white;
+    border-radius: 20%; /* Rounded corners */
+    padding: 5px 10px; /* Adjust padding as needed */
+    border: none;
+    cursor: pointer;
+    font-size: 14px; /* Adjust font size as needed */
+    z-index: 1; /* Ensure it's above the image */
+   }

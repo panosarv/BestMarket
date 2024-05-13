@@ -66,7 +66,7 @@ export async function saveCart(cart,user) {
   return result.rows[0];
 }
 
-export async function deleteCart(cartId,userId) {
+export async function deleteCart(cartId) {
   const result = await pool.query('DELETE FROM cart_products WHERE cartid = $1', [cartId]);
     return result;
 }

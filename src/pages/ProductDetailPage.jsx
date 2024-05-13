@@ -53,10 +53,10 @@ function ProductDetailPage() {
       <p>{category.description}</p>
       <TextField label="Search" variant="outlined" value={search} onChange={e => setSearch(e.target.value)} />
       {console.log("products: ",products)}  
-      <Grid container spacing={3}>
+      <Grid style={{marginTop:"2em"}} container spacing={3}>
         {filteredProducts.map(product => (
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Box display="flex" flexDirection="column" height="100%"> {/* use Box with flex to ensure same height */}
+          <Grid item xs={12} sm={6} md={4} lg={3} sx={{textAlign:{xs:'center'}}}>
+            <Box display="flex" flexDirection="column" height="100%">
               <div key={product.productid}>
                 <img src={product.image} alt={product.name} />
                 <h1>{product.name}</h1>
