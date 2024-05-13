@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import config from '../Config/authConfig.js';
+import secret from '../Config/authConfig.js';
 
 function verifyToken  (req, res, next){
     let token = req.headers["x-access-token"];
@@ -8,7 +8,7 @@ function verifyToken  (req, res, next){
         return res.status(403).send({ message: "No token provided!" });
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, secret, (err, decoded) => {
         if (err) {
             return res.status(401).send({ message: "Unauthorized!" });
         }

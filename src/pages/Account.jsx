@@ -89,7 +89,6 @@
           const data = await response.json();
           if(response.ok){
             localStorage.setItem('accesstoken', data.accesstoken);
-            localStorage.setItem('userId', data.id);
             setMessage(data.message);
   
             // Redirect to the profile page after successful sign in
@@ -116,7 +115,6 @@
 
       const data = await response.json();
       localStorage.setItem('accesstoken', data.accesstoken);
-      localStorage.setItem('userId', data.id);
       setMessage(data.message);
 
       // Redirect to the profile page after successful sign in
