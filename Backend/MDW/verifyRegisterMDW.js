@@ -1,7 +1,6 @@
 import pg from 'pg';
 const { Pool } = pg;
 import config from '../Config/dbConfig.js';
-import e from 'express';
 
 const pool = new Pool(config);
 
