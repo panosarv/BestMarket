@@ -1,6 +1,6 @@
 import express from 'express';
 import {getCartProductsUserId, saveCart,updateCart} from '../Controllers/cartController.js';
-import verifyToken from '../mdw/authJwtMDW.js';
+import verifyToken from '../MDW/authJwtMDW.js';
 
 const router = express.Router();
 
