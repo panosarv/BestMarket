@@ -1,9 +1,14 @@
 import express from 'express';
 import {getCartProductsUserId, saveCart,updateCart} from '../Controllers/cartController.js';
+import verifyToken from '../mdw/authJwtMDW.js';
+
 const router = express.Router();
 
+router.use(verifyToken);
+
 router.post("/api/saveCart", async (req, res) => {
-    const {user,cart} = req.body;
+    const cart = req.body.cart;
+    const user = req.userId;
     try {
         const items = await saveCart(cart,user);
         res.json(items);
@@ -14,7 +19,7 @@ router.post("/api/saveCart", async (req, res) => {
 });
 
 router.post("/api/getCartProductsUserId", async (req, res) => {
-    const userId = req.body.userId;
+    
     try {
         const items = await getCartProductsUserId(userId);
         res.json(items);
@@ -25,9 +30,9 @@ router.post("/api/getCartProductsUserId", async (req, res) => {
 });
 
 router.post("/api/deleteCart", async (req, res) => {
-    const {user,cart} = req.body;
+    const {cart} = req.body;
     try {
-        const items = await deleteCart(cart,user);
+        const items = await deleteCart(cart);
         res.json(items);
     } catch (err) {
         console.error(err);

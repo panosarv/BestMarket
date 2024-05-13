@@ -61,6 +61,7 @@ const updateCartInDatabase = async (updatedCart) => {
        method: 'POST',
        headers: {
          'Content-Type': 'application/json',
+         'x-access-token': localStorage.getItem('accesstoken')
        },
        body: JSON.stringify({ cart: updatedCart }),
      });
@@ -202,8 +203,9 @@ const removeItemFromCart = (cartId,item) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-access-token': localStorage.getItem('accesstoken') 
       },
-      body: JSON.stringify({ userId }),
+      
     });
 
     if (!response.ok) {
