@@ -1,0 +1,22 @@
+/* styles.css */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.cell {
+    padding: 10px;
+    
+    text-align: center;
+}
+
+.cell img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+}
+
+.help-container{
+    margin-top: 8em;
+}
