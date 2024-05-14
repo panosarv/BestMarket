@@ -44,7 +44,7 @@ function ShoppingCart({isOpen}){
                     {cartItems.map(item=>
                     (<CartItem key={item.id} {...item}/>))}
                     <div style={{display:"flex",justifyContent:"center"}}>
-                        {cartQuantity>0&&<Nav.Link to="/checkout" as={NavLink}><Button style={{backgroundColor:"#5f816f",color:"white",marginRight:'1em'}}>Calculate</Button></Nav.Link>||"Your cart is empty!"}
+                        {cartQuantity>0&&<Nav.Link to="/checkout" as={NavLink}><Button onClick={closeCart} style={{backgroundColor:"#5f816f",color:"white",marginRight:'1em'}}>Calculate</Button></Nav.Link>||"Your cart is empty!"}
                         {cartQuantity>0&&isUserLoggedIn()&&<Button style={{backgroundColor:"#5f816f",color:"white",marginLeft:'1em'}} onClick={handleClick}>Save cart</Button>}
                     </div>
                     <Nav.Link to="/checkout" as={NavLink}></Nav.Link>
