@@ -198,7 +198,7 @@ function Profile() {
               {editMode ? <input type="password" defaultValue="******" /> : '******'}
             </Card.Text>
             <Button onClick={handleEditClick}>{editMode ? 'Save' : 'Edit'}</Button>
-            <Button onClick={() => logout()}>Logout</Button>
+            <Button className='logout-btn' onClick={() => logout()}>Logout</Button>
           </Card.Body>
         </Card>
 
