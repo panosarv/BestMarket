@@ -7,10 +7,9 @@ const pool = new Pool(config);
 
 export async function getRecommendation(arrayOfItems,weather,meansOfTransport,location,radius){
           const { lng, lat } = location;
-          console.log("location", location)
-          console.log("weather", weather)
-          console.log("meansOfTransport", meansOfTransport)
-          const radiusInMeters = radius * 1000; 
+         
+          const radiusInMeters = radius * 10000; 
+          
           const query = `SELECT p.*, s.*, ps.price
           FROM Product p
           JOIN ProductSupermarket ps ON p.productid = ps.productid
@@ -20,11 +19,12 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           `;
           
           const result = (await pool.query(query)).rows;
-          console.log('result', result )
+          if (result.length === 0) {
+            return [];
+          }
           const resultWithDistance = result.map((item) => {
             const itemLocation = { lat: item.latitude, lng: item.longitude };
             const distance =  getDistanceFromLatLonInKm(location.lat, location.lng, itemLocation.lat, itemLocation.lng);
-            console.log("distance", distance)
             return { ...item, distanceFromUser: distance };
           });
           const indiviualProducts=[]
@@ -38,31 +38,42 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           }
           let listsOfAllProductsPerCategory=[]
           const categories = arrayOfItems.filter((item) => !item.hasOwnProperty('productid'));
-          const products = arrayOfItems.filter((item) => item.hasOwnProperty('productid')).map(item => item.productid);
+          const products = arrayOfItems.filter((item) => item.hasOwnProperty('productid')).map(item => ({
+            productid:item.productid,
+            quantity:item.quantity
+          }));
           for (const category of categories) {
-            const products = indiviualProducts.filter((item) => item.categoryid === category.categoryid);
+            const products = indiviualProducts.filter((item) => item.categoryid === category.categoryid).map((item) => ({...item,quantity:category.quantity}));
+            
             listsOfAllProductsPerCategory.push(products)
           }
-          listsOfAllProductsPerCategory = listsOfAllProductsPerCategory.map((item) => item.map((item) => item.productid));
+          listsOfAllProductsPerCategory = listsOfAllProductsPerCategory.map((item) => item.map((item) => ({
+            productid:item.productid,
+            quantity:item.quantity
+            })));
           listsOfAllProductsPerCategory = listsOfAllProductsPerCategory.map((item) => [...new Set(item)]);
           const allPossibleCarts=[]
           const supermarketsProductsMap = new Map();
           combine(listsOfAllProductsPerCategory,products, allPossibleCarts, listsOfAllProductsPerCategory.length);
+          console.log("allpossiblecarts",allPossibleCarts)
           allPossibleCarts.forEach((cart) => {
+            let cartIds = cart.map((item) => item.productid);
             //remove duplicate products
-            const cartSet = new Set(cart);
-            cart = Array.from(cartSet);
-            const recordsOfProductSupermarketThatProductsAreInCart = resultWithDistance.filter((item) => cart.includes(item.productid));
+            const cartSet = new Set(cartIds);
+            cartIds = Array.from(cartSet);
+            console.log("cart",cart)
+            const recordsOfProductSupermarketThatProductsAreInCart = resultWithDistance.filter((item) => cartIds.includes(item.productid));
             const supermarketIds = recordsOfProductSupermarketThatProductsAreInCart.map(item => item.supermarketid);
             const supermarketCount = supermarketIds.reduce((acc, id) => {
               acc[id] = (acc[id] || 0) + 1;
               return acc;
             }, {});
-            const recordsOfProductSupermarketThatAllProductsAreInSupermarket = recordsOfProductSupermarketThatProductsAreInCart.filter(item => supermarketCount[item.supermarketid] == cart.length);      
+            const recordsOfProductSupermarketThatAllProductsAreInSupermarket = recordsOfProductSupermarketThatProductsAreInCart.filter(item => supermarketCount[item.supermarketid] == cart.length);
+            console.log("recordsOfProductSupermarketThatAllProductsAreInSupermarket",recordsOfProductSupermarketThatAllProductsAreInSupermarket)      
             const supermarketIdsThatAllProductsAreInSupermarket = new Set(recordsOfProductSupermarketThatAllProductsAreInSupermarket.map(item => item.supermarketid));
             for(const supermarketId of supermarketIdsThatAllProductsAreInSupermarket){
               const cartPerSupermarket = recordsOfProductSupermarketThatAllProductsAreInSupermarket.filter(item => item.supermarketid === supermarketId);
-              const cost = calculateCostOfCart(cartPerSupermarket,supermarketId);
+              const cost = calculateCostOfCart(cart,cartPerSupermarket,supermarketId);
               
               if(supermarketsProductsMap.has(supermarketId)){
                 supermarketsProductsMap.get(supermarketId).push({cart:cartPerSupermarket,cost:cost,distance:cartPerSupermarket[0].distanceFromUser});
@@ -96,13 +107,10 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           });
           // Get the response data
           const data = await response.json();
-          console.log("data", data)
           const sortedRecommendation = data.sort((a,b) => b.score - a.score);
           const recommendationIds=sortedRecommendation.map((item) => item.supermarketId);
-          console.log("recommendationIds", recommendationIds, recommendationIds.join(',') )
           const recommendationQurey = `SELECT * FROM Supermarket WHERE supermarketid IN (${recommendationIds.join(',')})`;
           const recommendationResult = (await pool.query(recommendationQurey)).rows;
-          console.log("recommendationResult", recommendationResult)
           const idIndexMapping = recommendationIds.reduce((mapping, id, index) => {
             mapping[id] = index;
             return mapping;
@@ -116,7 +124,6 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
               cost: recommendation.cost // Assuming 'cost' is the property name for cost
             };
           });
-          console.log("recommendationResultWithDetails", recommendationResultWithDetails)
           const sortedRecommendationResult = recommendationIds.map(id => recommendationResultWithDetails[idIndexMapping[id]]);
           const nearestSupermarket = sortedRecommendationResult.sort((a,b) => a.distance - b.distance)[0].supermarketid;
           const chepestSupermarket = sortedRecommendationResult.sort((a,b) => a.cost - b.cost)[0].supermarketid;
@@ -147,7 +154,6 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           
           const addHeatMapQuery=`INSERT INTO Heatmap (user_latitude,user_longitude,supermarketid,supermarket_longitude,supermarket_latitude) VALUES (${lat},${lng},${recommendedSupermarket.supermarketid},${recommendedSupermarket.longitude},${recommendedSupermarket.latitude})`;
           const insertResult=await pool.query(addHeatMapQuery);
-          console.log("insertResult", insertResult)
           // const data = await response.json();
       
           // Return the data

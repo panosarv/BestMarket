@@ -12,11 +12,13 @@ export function combine(lists, combination, allCombinations,lengthOfLists) {
     }
   }
 
-export function calculateCostOfCart(cart,supermarketId){
+export function calculateCostOfCart(productQuantity,cart,supermarketId){
     let cost=0;
     for (const item of cart){
         if(item.supermarketid===supermarketId){
-            cost+=Number(item.price);
+            let quantity=productQuantity.find(product=>product.productid===item.productid).quantity;
+            console.log("quantity",quantity)
+            cost+=Number(item.price)*quantity;
         }
     }
     return cost;

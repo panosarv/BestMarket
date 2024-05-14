@@ -11,7 +11,7 @@ router.post("/api/saveCart", async (req, res) => {
     const user = req.userId;
     try {
         const items = await saveCart(cart,user);
-        res.json(items);
+        res.status(201).json(items);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while adding to cart' });
@@ -33,7 +33,7 @@ router.post("/api/deleteCart", async (req, res) => {
     const {cart} = req.body;
     try {
         const items = await deleteCart(cart);
-        res.json(items);
+        res.status(201).json(items);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'An error occurred while deleting cart' });
@@ -45,7 +45,7 @@ router.post("/api/updateCart", async (req, res) => {
 
     try {
        const updatedCart = await updateCart(cart.cartid, cart);
-       res.json(updatedCart);
+       res.status(201).json(updatedCart);
     } catch (err) {
        console.error(err);
        res.status(500).json({ error: 'An error occurred while updating the cart' });
