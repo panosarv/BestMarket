@@ -192,12 +192,6 @@ const removeItemFromCart = (cartId,item) => {
  };
 
  const fetchCartProducts = async () => {
-  const userId = localStorage.getItem('userId');
-  if (!userId) {
-    console.error('User ID not found in localStorage');
-    return;
-  }
-  console.log('userId:', userId)
   try {
     const response = await fetch('http://bestmarket-server.onrender.com/api/getCartProductsUserId', {
       method: 'POST',
