@@ -47,6 +47,12 @@ function Profile() {
     event.preventDefault();
   };
 
+  const logout  = () =>{
+    localStorage.removeItem('accesstoken');
+    navigate('/account');
+
+  }
+
   const updateCartInDatabase = async (updatedCart) => {
     try {
       const response = await fetch('https://bestmarket-server.onrender.com/api/updateCart', {
@@ -192,6 +198,7 @@ function Profile() {
               {editMode ? <input type="password" defaultValue="******" /> : '******'}
             </Card.Text>
             <Button onClick={handleEditClick}>{editMode ? 'Save' : 'Edit'}</Button>
+            <Button className='logout-btn' onClick={() => logout()}>Logout</Button>
           </Card.Body>
         </Card>
 
