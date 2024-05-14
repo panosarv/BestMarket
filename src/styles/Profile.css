@@ -1,7 +1,7 @@
 .profile-page {
     display: flex;
     justify-content: space-between;
-    margin-top: 20%;
+    margin-top: 10em
    }
    
    .profile-page .card {
@@ -44,12 +44,12 @@
 }
 
 .background-img{
-  background: url("public/undraw_shopping_app_flsj.svg");
-  background-size: cover;
-  background-position: top left;
-  background-repeat: no-repeat;
+  background: rgb(95,129,111);
+  background: radial-gradient(circle, rgba(95,129,111,1) 36%, rgba(26,63,12,1) 100%);
   height: 100vh;
   width: 100%;
+  position: absolute;
+  
   
 }
 
@@ -64,6 +64,17 @@
   border-color: var(--mainColor);
 }
 
+.header-color{
+  background-color: var(--mainColor);
+  color: var(--textColor);
+
+}
+
+.header-color-secondary{
+  background-color: var(--mainColorL);
+  color: var(--textColor);
+
+}
 
 .remove-item-btn {
     bottom: -10px; /* Adjust to overlap the image */

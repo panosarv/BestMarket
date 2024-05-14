@@ -36,6 +36,8 @@ function Checkout() {
   const [shippingCode, setShippingCode] = useState("");
   const [anchorEl, setAnchorEl] = useState({});
   const [maxFrequency, setMaxFrequency] = useState(0);
+  const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [searchButtonClassName, setSearchButtonClassName] =
     useState("search-button");
   const handleOptionChange = (event) => {
@@ -50,11 +52,29 @@ function Checkout() {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const submitButtonRef = useRef(null);
-  const steps = [
-    "Add your groceries",
-    "Fill aditional information",
-    "Find the the best market!",
-  ];
+
+  const checkFormValidity = () => {
+    // Check if the checkbox is checked or if all form fields are filled
+    const allFieldsFilled = address && city && shippingCode;
+    setIsFormValid(isFormDisabled || allFieldsFilled);
+  };
+
+  // Function to toggle form disabled state
+  const toggleFormDisabled = () => {
+    setIsFormDisabled(!isFormDisabled);
+    if (!isFormDisabled) {
+      setAddress("");
+      setCity("");
+      setShippingCode("");
+    }
+    checkFormValidity();
+
+  };
+
+  useEffect(() => {
+    checkFormValidity();
+  }, [address, city, shippingCode, isFormDisabled]);
+
   useEffect(() => {
     const handleClick = async () => {
       setIsLoading(true);
@@ -85,7 +105,7 @@ function Checkout() {
         }
       );
       const data = await response.json();
-        
+
       setRecommendedSupermarkets(data);
       const heatmapResponse = await fetch(
         "https://bestmarket-server.onrender.com/api/heatmap",
@@ -115,7 +135,7 @@ function Checkout() {
         submitButtonRef.current.removeEventListener("click", handleClick);
     };
   }, [selectedOption, weatherData, city, shippingCode, cartItems]);
-  
+
   const settings = {
     dots: true,
     infinite: true,
@@ -216,31 +236,47 @@ function Checkout() {
             onSubmit={(e) => {
               e.preventDefault();
               setIsFormSubmitted(true);
-              setAddress(e.target.elements.address.value);
-              setCity(e.target.elements.city.value);
-              setShippingCode(e.target.elements.shippingCode.value);
+              if(isFormDisabled){
+                setAddress("Current location");
+                setCity("Current city");
+                setShippingCode("Current shipping code");
+              }
+              else{
+                setAddress(e.target.elements.address.value);
+                setCity(e.target.elements.city.value);
+                setShippingCode(e.target.elements.shippingCode.value);
+                check
+              }
             }}
           >
             <h3>Fill your location</h3>
             <div>
               <label>
                 Shipping Code:
-                <input className="form-item" type="text" name="shippingCode" />
+                <input className="form-item" type="text" name="shippingCode" value={shippingCode} onChange={(e) => setShippingCode(e.target.value)} disabled={isFormDisabled} />
               </label>
             </div>
             <div>
               <label>
                 Address:
-                <input className="form-item" type="text" name="address" />
+                <input className="form-item" type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={isFormDisabled} />
               </label>
             </div>
             <div>
               <label>
                 City:
-                <input className="form-item" type="text" name="city" />
+                <input className="form-item" type="text" name="city" value={city} onChange={(e) => setCity(e.target.value)} disabled={isFormDisabled}/>
               </label>
             </div>
-            <input type="submit" value="Submit" />
+            <div>
+              <label>
+                <input type="checkbox" onChange={toggleFormDisabled} />
+                Use current location
+              </label>
+            </div>
+            {isFormValid && (
+          <input type="submit" value="Submit" />
+        )}
           </form>
         )}
 
@@ -269,7 +305,14 @@ function Checkout() {
           )}
         </div>
       </div>
-      <div style={{ display: "flex", flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {recommendedSupermarkets.length == 0 && isLoading && (
           <Stack
             spacing={2}
@@ -303,7 +346,7 @@ function Checkout() {
         {recommendedSupermarkets.length > 0 && heatmap.length > 0 && (
           <div className="recommendation-container">
             <h3>Recommended Supermarkets</h3>
-              <Slider {...settings}>  
+            <Slider {...settings}>
               {recommendedSupermarkets.map((supermarket) => (
                 <div>
                   <div
@@ -387,12 +430,11 @@ function Checkout() {
                   </Divider>
                 </div>
               ))}
-              </Slider>
-            </div>
+            </Slider>
+          </div>
         )}
         {heatmap.length > 0 && (
           <div style={{ display: "flex" }}>
-          
             <div
               style={{
                 display: "flex",
