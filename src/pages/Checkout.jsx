@@ -37,6 +37,7 @@ function Checkout() {
   const [anchorEl, setAnchorEl] = useState({});
   const [maxFrequency, setMaxFrequency] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
   const [searchButtonClassName, setSearchButtonClassName] =
     useState("search-button");
   const handleOptionChange = (event) => {
@@ -52,12 +53,27 @@ function Checkout() {
   const id = open ? "simple-popover" : undefined;
   const submitButtonRef = useRef(null);
 
-
+  const checkFormValidity = () => {
+    // Check if the checkbox is checked or if all form fields are filled
+    const allFieldsFilled = address && city && shippingCode;
+    setIsFormValid(isFormDisabled || allFieldsFilled);
+  };
 
   // Function to toggle form disabled state
   const toggleFormDisabled = () => {
     setIsFormDisabled(!isFormDisabled);
+    if (!isFormDisabled) {
+      setAddress("");
+      setCity("");
+      setShippingCode("");
+    }
+    checkFormValidity();
+
   };
+
+  useEffect(() => {
+    checkFormValidity();
+  }, [address, city, shippingCode, isFormDisabled]);
 
   useEffect(() => {
     const handleClick = async () => {
@@ -229,6 +245,7 @@ function Checkout() {
                 setAddress(e.target.elements.address.value);
                 setCity(e.target.elements.city.value);
                 setShippingCode(e.target.elements.shippingCode.value);
+                check
               }
             }}
           >
@@ -236,19 +253,19 @@ function Checkout() {
             <div>
               <label>
                 Shipping Code:
-                <input className="form-item" type="text" name="shippingCode" disabled={isFormDisabled} />
+                <input className="form-item" type="text" name="shippingCode" value={shippingCode} onChange={(e) => setShippingCode(e.target.value)} disabled={isFormDisabled} />
               </label>
             </div>
             <div>
               <label>
                 Address:
-                <input className="form-item" type="text" name="address" disabled={isFormDisabled} />
+                <input className="form-item" type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={isFormDisabled} />
               </label>
             </div>
             <div>
               <label>
                 City:
-                <input className="form-item" type="text" name="city" disabled={isFormDisabled}/>
+                <input className="form-item" type="text" name="city" value={city} onChange={(e) => setCity(e.target.value)} disabled={isFormDisabled}/>
               </label>
             </div>
             <div>
@@ -257,7 +274,9 @@ function Checkout() {
                 Use current location
               </label>
             </div>
-            <input type="submit" value="Submit" />
+            {isFormValid && (
+          <input type="submit" value="Submit" />
+        )}
           </form>
         )}
 

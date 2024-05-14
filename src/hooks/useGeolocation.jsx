@@ -11,7 +11,7 @@ const useGeolocation = (address) => {
 
   useEffect(() => {
     if (!address) return;
-    if (address == "Current location, Current city, Current shipping code") {
+    if (address == "Current location, Current city, Current shipping code" ) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           setLocation({
