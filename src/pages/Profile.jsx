@@ -193,7 +193,7 @@ const removeItemFromCart = (cartId,item) => {
 
  const fetchCartProducts = async () => {
   try {
-    const response = await fetch('http://bestmarket-server.onrender.com/api/getCartProductsUserId', {
+    const response = await fetch('https://bestmarket-server.onrender.com/api/getCartProductsUserId', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
