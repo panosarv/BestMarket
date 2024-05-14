@@ -195,12 +195,7 @@ function Profile() {
           </Card.Body>
         </Card>
 
-        <Card className='mb-3'>
-          <Card.Header className='header-color'>Current Location</Card.Header>
-          <Card.Body>
-            <p>Address: 123 Main St</p>
-          </Card.Body>
-        </Card>
+       
       </div>
       <Card className="mb-3">
         <Card.Header className='header-color-secondary'>Saved Carts</Card.Header>
