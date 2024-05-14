@@ -67,7 +67,6 @@ function Checkout() {
       setSearchButtonClassName("disabled-search-button");
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
-      console.log("Authorization", `${localStorage.getItem("accesstoken")}`);
       const response = await fetch(
         "https://bestmarket-server.onrender.com/api/recommendation",
         {
@@ -86,8 +85,7 @@ function Checkout() {
         }
       );
       const data = await response.json();
-
-      console.log("Rec Data:", data);
+        
       setRecommendedSupermarkets(data);
       const heatmapResponse = await fetch(
         "https://bestmarket-server.onrender.com/api/heatmap",
