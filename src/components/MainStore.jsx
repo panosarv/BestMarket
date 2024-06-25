@@ -68,7 +68,7 @@ function MainStore(){
         <Container className="mainstore">
             <Stack direction="row" className="filters-container" gap={0}>
                
-                <IconButton onClick={() => handleCategorySelect('DairyEggs')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
+                <IconButton onClick={() => handleCategorySelect('Foods')} style={{boxShadow: selectedCategories.includes('DairyEggs') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><IcecreamIcon/>Dairy & Eggs</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Liquers')} style={{boxShadow: selectedCategories.includes('Liquers') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><LiquorIcon/>Liquers</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('Frozen')} style={{boxShadow: selectedCategories.includes('Frozen') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><SetMealIcon/>Frozen</Item></IconButton>
                 <IconButton onClick={() => handleCategorySelect('FreshlyBaked')} style={{boxShadow: selectedCategories.includes('FreshlyBaked') ? 'inset 0 0 5px #5f816f' : 'none',borderRadius:'10px'}}><Item><BakeryDiningIcon/>Freshly Baked</Item></IconButton>

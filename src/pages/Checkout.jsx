@@ -38,6 +38,7 @@ function Checkout() {
   const [maxFrequency, setMaxFrequency] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [checkOutContainerClass, setCheckOutContainerClass] = useState('checkout-container')
   const [searchButtonClassName, setSearchButtonClassName] =
     useState("search-button");
   const handleOptionChange = (event) => {
@@ -77,6 +78,7 @@ function Checkout() {
 
   useEffect(() => {
     const handleClick = async () => {
+      setCheckOutContainerClass('checkout-container-disappear')
       setIsLoading(true);
       setRecommendedSupermarkets([]);
       setHeatmap([]);
@@ -93,7 +95,7 @@ function Checkout() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${localStorage.getItem("accesstoken")}`,
+            'x-access-token': `${localStorage.getItem("accesstoken")}`,
           },
           body: JSON.stringify({
             arrayOfItems,
@@ -149,7 +151,7 @@ function Checkout() {
 
   return (
     <div>
-      <div className="checkout-container">
+      <div className={checkOutContainerClass}>
         <div className="radio-container">
           <h3>Choose your method of transport</h3>
           <label
@@ -245,7 +247,7 @@ function Checkout() {
                 setAddress(e.target.elements.address.value);
                 setCity(e.target.elements.city.value);
                 setShippingCode(e.target.elements.shippingCode.value);
-                check
+                
               }
             }}
           >
