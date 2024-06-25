@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllCategories, getItemsByCategoryId, getCategoryById } from '../Models/itemModel.js';
+import { getAllParentCategories, getItemsByCategoryId, getCategoryById } from '../Models/itemModel.js';
 import { getRecommendation } from '../Controllers/recommendationController.js';
 import { getHeatmap } from '../Controllers/heatmapController.js';
 
