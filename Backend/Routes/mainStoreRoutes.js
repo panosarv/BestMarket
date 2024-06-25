@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/api/mainstore", async (_, res) => {
   try {
-    const items = await getAllCategories();
+    const items = await getAllParentCategories();
     res.status(201).json(items);
   } catch (err) {
     console.error(err);
@@ -25,6 +25,18 @@ router.get("/api/category/:id", async (req, res) => {
         res.status(500).json({ error: 'An error occurred while retrieving items' });
     }
 });
+
+router.get('/api/subcategory/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const items = await getChildCategoriesByParentId(id);
+        res.status(201).json(items);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'An error occurred while retrieving items' });
+    }
+
+}
 
 router.post("/api/recommendation", async (req, res) => {
   const { arrayOfItems, weatherCondition, meansOfTransport, location, radius } = req.body;
