@@ -11,6 +11,7 @@ import Profile from './pages/Profile'
 import{ShoppingCartProvider} from "./context/ShoppingCartContext"
 import { WeatherContext } from './context/WeatherContext'
 import { useState } from 'react'
+import SubCategoryDetailPage from './pages/SubCategoryDetailPage'
 
 function App() {
   const [weatherData,setWeatherData]=useState({lat:null,lng:null,condition:''})
@@ -25,7 +26,8 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/help" element={<Help />} />
           <Route path="/checkout" element={<Checkout />}/>
-          <Route path="/category/:category" element={<ProductDetailPage />}/>
+          <Route path="/category/:category" element={<SubCategoryDetailPage />}/>
+          <Route path="/subcategory/:subcategory" element={<ProductDetailPage />}/>
           <Route path="/profile" element={<Profile/>}/>
         </Routes>
       </Container>
