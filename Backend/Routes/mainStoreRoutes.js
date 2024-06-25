@@ -36,7 +36,7 @@ router.get('/api/subcategory/:id', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while retrieving items' });
     }
 
-}
+});
 
 router.post("/api/recommendation", async (req, res) => {
   const { arrayOfItems, weatherCondition, meansOfTransport, location, radius } = req.body;
