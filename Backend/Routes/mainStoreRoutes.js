@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllParentCategories, getItemsByCategoryId, getChildCategoriesByParentId } from '../Models/itemModel.js';
+import { getAllParentCategories, getItemsByCategoryId, getChildCategoriesByParentId, getCategoryById } from '../Models/itemModel.js';
 import { getRecommendation } from '../Controllers/recommendationController.js';
 import { getHeatmap } from '../Controllers/heatmapController.js';
 
@@ -18,7 +18,7 @@ router.get("/api/mainstore", async (_, res) => {
 router.get("/api/category/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const items = await getChildCategoriesByParentId(id);
+        const items = await getCategoryById(id);
         res.status(201).json(items);
     } catch (err) {
         console.error(err);
@@ -82,5 +82,7 @@ router.get("/api/product/:id", async (req, res) => {
     res.status(500).json({ error: 'An error occurred while retrieving the item' });
   }
 });
+
+
 
 export default router;

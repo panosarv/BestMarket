@@ -55,7 +55,6 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           const allPossibleCarts=[]
           const supermarketsProductsMap = new Map();
           combine(listsOfAllProductsPerCategory,products, allPossibleCarts, listsOfAllProductsPerCategory.length);
-          console.log("allpossiblecarts",allPossibleCarts)
           allPossibleCarts.forEach((cart) => {
             let cartIds = cart.map((item) => item.productid);
             //remove duplicate products
