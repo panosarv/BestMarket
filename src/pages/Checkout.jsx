@@ -608,7 +608,7 @@ function Checkout() {
                 </Marker>
               )}
               {showNearestSupermarket &&
-                recommendedSupermarkets.slice(1, 2).map((supermarket) => (
+                recommendedSupermarkets.slice(2, 3).map((supermarket) => (
                   <Marker
                     position={[supermarket.latitude, supermarket.longitude]}
                     key={supermarket.supermarketid}
@@ -633,7 +633,7 @@ function Checkout() {
                   </Marker>
                 ))}
               {showCheapestSupermarket &&
-                recommendedSupermarkets.slice(2, 3).map((supermarket) => (
+                recommendedSupermarkets.slice(1, 2).map((supermarket) => (
                   <Marker
                     position={[supermarket.latitude, supermarket.longitude]}
                     key={supermarket.supermarketid}
