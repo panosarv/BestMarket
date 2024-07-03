@@ -21,13 +21,6 @@ function MainStore() {
                 setItems(data);
                 setIsLoading(false);
             });
-
-        // Fetch categories from the backend
-        fetch('https://bestmarket-server.onrender.com/api/categories')
-            .then(response => response.json())
-            .then(data => {
-                setCategories(data);
-            });
     }, []);
 
     const handleCategorySelect = (category) => {
