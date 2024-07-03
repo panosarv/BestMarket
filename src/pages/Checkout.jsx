@@ -140,12 +140,11 @@ function Checkout() {
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
       const response = await fetch(
-        "https://bestmarket-server.onrender.com//api/recommendation",
+        "https://bestmarket-server.onrender.com/api/recommendation",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": `${localStorage.getItem("accesstoken")}`,
           },
           body: JSON.stringify({
             arrayOfItems,
