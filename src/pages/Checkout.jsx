@@ -7,14 +7,7 @@ import CartItem from "../components/CartItem";
 import { Stack, Card } from "react-bootstrap";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
-import {
-  MapContainer,
-  TileLayer,
-  useMap,
-  Marker,
-  Popup,
-  Circle,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Rating from "@mui/material/Rating";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
@@ -22,11 +15,62 @@ import Skeleton from "@mui/material/Skeleton";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import {
+  Drawer,
+  IconButton,
+  FormControlLabel,
+  Checkbox,
+  Button,
+} from "@mui/material";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import L from "leaflet";
+
+// Define custom icons
+const userLocationIcon = L.icon({
+  iconUrl:
+    "https://upload.wikimedia.org/wikipedia/commons/9/96/User_icon-cp.png",
+  iconSize: [30, 30],
+  iconAnchor: [15, 30],
+  popupAnchor: [0, -30],
+});
+
+const recommendedSupermarketIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const nearestSupermarketIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+const cheapestSupermarketIcon = new L.Icon({
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
   const { weatherData } = useContext(WeatherContext);
-  const { closeCart, cartItems, cartQuantity } = useShoppingCart();
+  const { closeCart, cartItems, cartQuantity,clearCart } = useShoppingCart();
   const [selectedOption, setSelectedOption] = useState("");
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [city, setCity] = useState("");
@@ -38,9 +82,17 @@ function Checkout() {
   const [maxFrequency, setMaxFrequency] = useState(0);
   const [isFormDisabled, setIsFormDisabled] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-  const [checkOutContainerClass, setCheckOutContainerClass] = useState('checkout-container')
+  const [checkOutContainerClass, setCheckOutContainerClass] =
+    useState("checkout-container");
   const [searchButtonClassName, setSearchButtonClassName] =
     useState("search-button");
+  const [showMap, setShowMap] = useState(false); // New state for showing the map
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [showYourLocation, setShowYourLocation] = useState(true);
+  const [showRecommendedSupermarket, setShowRecommendedSupermarket] =
+    useState(true);
+  const [showNearestSupermarket, setShowNearestSupermarket] = useState(false);
+  const [showCheapestSupermarket, setShowCheapestSupermarket] = useState(false);
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
@@ -55,12 +107,10 @@ function Checkout() {
   const submitButtonRef = useRef(null);
 
   const checkFormValidity = () => {
-    // Check if the checkbox is checked or if all form fields are filled
     const allFieldsFilled = address && city && shippingCode;
     setIsFormValid(isFormDisabled || allFieldsFilled);
   };
 
-  // Function to toggle form disabled state
   const toggleFormDisabled = () => {
     setIsFormDisabled(!isFormDisabled);
     if (!isFormDisabled) {
@@ -69,7 +119,6 @@ function Checkout() {
       setShippingCode("");
     }
     checkFormValidity();
-
   };
 
   useEffect(() => {
@@ -78,7 +127,8 @@ function Checkout() {
 
   useEffect(() => {
     const handleClick = async () => {
-      setCheckOutContainerClass('checkout-container-disappear')
+      setCheckOutContainerClass("checkout-container-disappear");
+      clearCart();
       setIsLoading(true);
       setRecommendedSupermarkets([]);
       setHeatmap([]);
@@ -90,12 +140,12 @@ function Checkout() {
       const arrayOfItems = cartItems;
       const weatherCondition = condition;
       const response = await fetch(
-        "https://bestmarket-server.onrender.com/api/recommendation",
+        "https://bestmarket-server.onrender.com//api/recommendation",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'x-access-token': `${localStorage.getItem("accesstoken")}`,
+            "x-access-token": `${localStorage.getItem("accesstoken")}`,
           },
           body: JSON.stringify({
             arrayOfItems,
@@ -128,6 +178,7 @@ function Checkout() {
       setHeatmap(heatmapData);
       setIsLoading(false);
       setSearchButtonClassName("search-button");
+      setShowMap(true);
     };
     if (submitButtonRef.current)
       submitButtonRef.current.addEventListener("click", handleClick);
@@ -147,6 +198,43 @@ function Checkout() {
     centerMode: true,
     focusOnSelect: true,
     arrows: true,
+  };
+
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setDrawerOpen(open);
+  };
+
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    switch (name) {
+      case "showYourLocation":
+        setShowYourLocation(checked);
+        break;
+      case "showRecommendedSupermarket":
+        setShowRecommendedSupermarket(checked);
+        break;
+      case "showNearestSupermarket":
+        setShowNearestSupermarket(checked);
+        break;
+      case "showCheapestSupermarket":
+        setShowCheapestSupermarket(checked);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const getDirections = (lat, lng) => {
+    const userLat = weatherData.lat;
+    const userLng = weatherData.lng;
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${lat},${lng}`;
+    window.open(directionsUrl, "_blank");
   };
 
   return (
@@ -175,7 +263,7 @@ function Checkout() {
             style={{ marginRight: "3px" }}
             htmlFor="motorbike"
           >
-            Motocycle
+            Motorcycle
             <input
               type="radio"
               id="motorbike"
@@ -238,16 +326,14 @@ function Checkout() {
             onSubmit={(e) => {
               e.preventDefault();
               setIsFormSubmitted(true);
-              if(isFormDisabled){
+              if (isFormDisabled) {
                 setAddress("Current location");
                 setCity("Current city");
                 setShippingCode("Current shipping code");
-              }
-              else{
+              } else {
                 setAddress(e.target.elements.address.value);
                 setCity(e.target.elements.city.value);
                 setShippingCode(e.target.elements.shippingCode.value);
-                
               }
             }}
           >
@@ -255,19 +341,40 @@ function Checkout() {
             <div>
               <label>
                 Shipping Code:
-                <input className="form-item" type="text" name="shippingCode" value={shippingCode} onChange={(e) => setShippingCode(e.target.value)} disabled={isFormDisabled} />
+                <input
+                  className="form-item"
+                  type="text"
+                  name="shippingCode"
+                  value={shippingCode}
+                  onChange={(e) => setShippingCode(e.target.value)}
+                  disabled={isFormDisabled}
+                />
               </label>
             </div>
             <div>
               <label>
                 Address:
-                <input className="form-item" type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={isFormDisabled} />
+                <input
+                  className="form-item"
+                  type="text"
+                  name="address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  disabled={isFormDisabled}
+                />
               </label>
             </div>
             <div>
               <label>
                 City:
-                <input className="form-item" type="text" name="city" value={city} onChange={(e) => setCity(e.target.value)} disabled={isFormDisabled}/>
+                <input
+                  className="form-item"
+                  type="text"
+                  name="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  disabled={isFormDisabled}
+                />
               </label>
             </div>
             <div>
@@ -276,9 +383,7 @@ function Checkout() {
                 Use current location
               </label>
             </div>
-            {isFormValid && (
-          <input type="submit" value="Submit" />
-        )}
+            {isFormValid && <input type="submit" value="Submit" />}
           </form>
         )}
 
@@ -299,7 +404,9 @@ function Checkout() {
           {isFormSubmitted && cartItems.length > 0 && (
             <button
               className={searchButtonClassName}
-              disabled={searchButtonClassName == "search-button" ? false : true}
+              disabled={
+                searchButtonClassName === "search-button" ? false : true
+              }
               ref={submitButtonRef}
             >
               Search
@@ -313,9 +420,10 @@ function Checkout() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
         }}
       >
-        {recommendedSupermarkets.length == 0 && isLoading && (
+        {recommendedSupermarkets.length === 0 && isLoading && (
           <Stack
             spacing={2}
             style={{
@@ -325,10 +433,7 @@ function Checkout() {
               alignItems: "center",
             }}
           >
-            {/* For variant="text", adjust the height via font-size */}
             <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
-
-            {/* For other variants, adjust the size with `width` and `height` */}
             <Skeleton
               variant="rounded"
               style={{ width: "90vw", height: "25vh", borderRadius: "3em" }}
@@ -378,7 +483,7 @@ function Checkout() {
                       <div style={{ display: "flex", flexDirection: "column" }}>
                         <Card.Title>{supermarket.name}</Card.Title>
                         <Card.Text>
-                          Cost: {Math.round(supermarket.cost * 100) / 100} E
+                          Cost: {Math.round(supermarket.cost * 100) / 100} €
                         </Card.Text>
                         Rating:
                         <Rating
@@ -416,11 +521,28 @@ function Checkout() {
                             supermarket.latitude,
                             supermarket.longitude,
                           ]}
+                          icon={recommendedSupermarketIcon}
                         >
-                          <Popup>{supermarket.name}</Popup>
+                          <Popup>
+                            {supermarket.name}
+                            <br />
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() =>
+                                getDirections(
+                                  supermarket.latitude,
+                                  supermarket.longitude
+                                )
+                              }
+                            >
+                              Get Directions
+                            </Button>
+                          </Popup>
                         </Marker>
                         <Marker
                           position={[heatmap[0].user_lat, heatmap[0].user_lng]}
+                          icon={userLocationIcon}
                         >
                           <Popup>Your location</Popup>
                         </Marker>
@@ -435,58 +557,179 @@ function Checkout() {
             </Slider>
           </div>
         )}
-        {heatmap.length > 0 && (
-          <div style={{ display: "flex" }}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
+
+        {showMap && recommendedSupermarkets.length > 0 && (
+          <div style={{ position: "relative", width: "100%" }}>
+            <MapContainer
+              center={[
+                recommendedSupermarkets[0].latitude,
+                recommendedSupermarkets[0].longitude,
+              ]}
+              zoom={13}
+              scrollWheelZoom={false}
+              className="map-container"
+              style={{ height: "400px", width: "100%", marginTop: "20px" }}
             >
-              <h3 style={{ marginTop: "3vh" }}>Previous Recommendations:</h3>
-              <MapContainer
-                center={[heatmap[0].user_lat, heatmap[0].user_lng]}
-                zoom={13}
-                scrollWheelZoom={false}
-                className="map-container-prev"
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={[heatmap[0].user_lat, heatmap[0].user_lng]}>
-                  <Popup>Your location</Popup>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              {showYourLocation && (
+                <Marker
+                  position={[weatherData.lat, weatherData.lng]}
+                  icon={userLocationIcon}
+                >
+                  <Popup>You are here</Popup>
                 </Marker>
-                {heatmap.map((item) => {
-                  return (
-                    <Circle
-                      center={[item.lat, item.lng]}
-                      pathOptions={{
-                        color: getColorFromFrequency(item.count / maxFrequency),
-                      }}
-                      radius={700}
+              )}
+              {showRecommendedSupermarket && (
+                <Marker
+                  position={[
+                    recommendedSupermarkets[0].latitude,
+                    recommendedSupermarkets[0].longitude,
+                  ]}
+                  icon={recommendedSupermarketIcon}
+                >
+                  <Popup>
+                    Recommended Supermarket
+                    <br />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() =>
+                        getDirections(
+                          recommendedSupermarkets[0].latitude,
+                          recommendedSupermarkets[0].longitude
+                        )
+                      }
                     >
-                      <Marker position={[item.lat, item.lng]}>
-                        <Popup>
-                          {`Supermarket frequency: ${
-                            Math.round(
-                              ((item.count / maxFrequency) * 100 +
-                                Number.EPSILON) *
-                                100
-                            ) / 100
-                          }%`}
-                        </Popup>
-                      </Marker>
-                    </Circle>
-                  );
-                })}
-              </MapContainer>
-            </div>
+                      Get Directions
+                    </Button>
+                  </Popup>
+                </Marker>
+              )}
+              {showNearestSupermarket &&
+                recommendedSupermarkets.slice(1, 2).map((supermarket) => (
+                  <Marker
+                    position={[supermarket.latitude, supermarket.longitude]}
+                    key={supermarket.supermarketid}
+                    icon={nearestSupermarketIcon}
+                  >
+                    <Popup>
+                      Nearest Supermarket
+                      <br />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          getDirections(
+                            supermarket.latitude,
+                            supermarket.longitude
+                          )
+                        }
+                      >
+                        Get Directions
+                      </Button>
+                    </Popup>
+                  </Marker>
+                ))}
+              {showCheapestSupermarket &&
+                recommendedSupermarkets.slice(2, 3).map((supermarket) => (
+                  <Marker
+                    position={[supermarket.latitude, supermarket.longitude]}
+                    key={supermarket.supermarketid}
+                    icon={cheapestSupermarketIcon}
+                  >
+                    <Popup>
+                      Cheapest Supermarket
+                      <br />
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                          getDirections(
+                            supermarket.latitude,
+                            supermarket.longitude
+                          )
+                        }
+                      >
+                        Get Directions
+                      </Button>
+                    </Popup>
+                  </Marker>
+                ))}
+            </MapContainer>
+            <IconButton
+              style={{
+                position: "absolute",
+                top: 20,
+                right: 20,
+                backgroundColor: "white",
+                border: "1px solid grey",
+                borderRadius: "5px",
+                zIndex: 1000,
+              }}
+              onClick={toggleDrawer(true)}
+            >
+              <FilterListIcon />
+            </IconButton>
           </div>
         )}
       </div>
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <div
+          style={{
+            width: 250,
+            padding: 20,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Filter Options
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showYourLocation}
+                onChange={handleCheckboxChange}
+                name="showYourLocation"
+              />
+            }
+            label="Your location"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showRecommendedSupermarket}
+                onChange={handleCheckboxChange}
+                name="showRecommendedSupermarket"
+              />
+            }
+            label="Recommended supermarket"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showNearestSupermarket}
+                onChange={handleCheckboxChange}
+                name="showNearestSupermarket"
+              />
+            }
+            label="Nearest supermarket"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showCheapestSupermarket}
+                onChange={handleCheckboxChange}
+                name="showCheapestSupermarket"
+              />
+            }
+            label="Cheapest supermarket"
+          />
+        </div>
+      </Drawer>
     </div>
   );
 }

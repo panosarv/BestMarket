@@ -15,7 +15,7 @@ export async function getRecommendation(arrayOfItems,weather,meansOfTransport,lo
           JOIN ProductSupermarket ps ON p.productid = ps.productid
           JOIN Supermarket s ON ps.supermarketid = s.supermarketid
           WHERE earth_box(ll_to_earth(${lng}, ${lat}), ${radiusInMeters}) @> ll_to_earth(s.longitude, s.latitude)
-          AND p.categoryid IN (${arrayOfItems.map((item) => item.categoryid).join(',')})
+          AND p.productid IN (${arrayOfItems.map((item) => item.productid).join(',')})
           `;
           
           const result = (await pool.query(query)).rows;

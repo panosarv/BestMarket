@@ -6,9 +6,10 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { useNavigate } from 'react-router-dom';
-import "../styles/ProductCard.css"; // Import the CSS file for additional styling
+import "../styles/CategoryCard.css"; // Import the CSS file for additional styling
+import { Category } from '@mui/icons-material';
 
-function ProductCard(props) {
+function CategoryCard(props) {
     console.log('Product card props', props);
     const {
         getItemQuantity,
@@ -16,33 +17,32 @@ function ProductCard(props) {
     } = useShoppingCart();
     const quantity = getItemQuantity(props.id);
     const navigate = useNavigate();
-    const navigateToProductPage = () => {
-        navigate(`/subcategory/${props.categoryid}`);
+    const navigateToCategoryPage = () => {
+        navigate(`/category/${props.categoryid}`);
     };
 
     return (
-        <Card className="product-card" onClick={navigateToProductPage}>
+        <Card className="category-card" onClick={navigateToCategoryPage}>
             <CardActionArea>
                 <CardMedia
                     component="img"
                     height="200"
                     image={props.image}
                     alt="item image"
-                    className="product-image"
+                    className="category-image"
                 />
-                <CardContent className="product-content">
-                    <Typography gutterBottom variant="h6" component="div" className="product-name">
+                <CardContent className="category-content">
+                    <Typography gutterBottom variant="h6" component="div" className="category-name">
                         {props.name}
                     </Typography>
                     <hr />
-                    <Typography variant="body2" color="text.secondary" className="product-description">
+                    <Typography variant="body2" color="text.secondary" className="category-description">
                         {props.description}
                     </Typography>
                 </CardContent>
             </CardActionArea>
-            
         </Card>
     );
 }
 
-export default ProductCard;
+export default CategoryCard;
