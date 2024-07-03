@@ -1,54 +1,103 @@
 /* ProductDetailPage.css */
-:root{
-    --mainColor: #2e4637;
-    --mainColorL: #5f816f;
-    --mainColorD: #1a3f0c;
-    --secondaryColor: #3a6cd8;
-    --textColor: #eee;
-  
-  }
+
+.product-detail {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-detail img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-detail h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.product-detail p {
+  font-size: 1.125rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.product-detail .MuiTextField-root {
+  width: 80%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.product-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+}
+
+.product-card img {
+  object-fit: contain;
+  padding: 16px;
+  width: 100%;
+  height: 200px;
+}
+
+.product-card-content {
+  text-align: center;
+}
+
+.product-card h2 {
+  font-size: 1.25rem;
+  font-weight: medium;
+  margin-top: 10px;
+}
+
+.add-to-cart {
+  background-color: #5f816f;
+  margin-top: 20px;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
   .product-detail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 80px;
-    width: 80%; /* Adjust this value to control the width of the content */
+    padding: 10px;
   }
-  
-  .product-detail img {
-    width: 30%;
-    height: auto;
-    margin-bottom: 20px;
-  }
-  
+
   .product-detail h1 {
-    font-size: 2em;
-    margin-bottom: 10px;
+    font-size: 1.5rem;
   }
-  
+
   .product-detail p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
+    font-size: 1rem;
   }
-  
- 
-  .add-to-cart{
+
+  .product-detail .MuiTextField-root {
+    width: 100%;
+  }
+
+  .product-card img {
+    height: 150px;
+  }
+
+  .product-card h2 {
+    font-size: 1rem;
+  }
+
+  .add-to-cart {
+    margin-top: 10px;
     background-color: var(--mainColorD);
     color: var(--textColor);
     border: var(--mainColorL);
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   }
-  
-  @media screen and (max-width: 768px)
-  {
-    .product-detail {
-      display: flex;
-      margin: 20px;
-      width: 90%;
-      justify-content: center;
-      align-items: center; 
-      margin-top: 9em;/* Adjust this value to control the width of the content */
-    }
-    
-  }
+}

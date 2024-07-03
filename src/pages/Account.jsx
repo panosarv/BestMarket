@@ -16,6 +16,10 @@
     const [hasError, setHasError] = useState(true)
     const navigateTo = useNavigate();
     const changeAuthMode = () => {
+      setMessage("");
+      setEmail('');
+      setUsername('');
+      setPassword('');
       setAuthMode(authMode === "signin" ? "signup" : "signin")
     }
 
@@ -68,7 +72,7 @@
           });
   
           
-  
+          
           const data = await response.json();
           setMessage(data.message);
   
@@ -86,14 +90,18 @@
   
           
           
-          const data = await response.json();
+          
           if(response.ok){
+            const data = await response.json();
             localStorage.setItem('accesstoken', data.accesstoken);
             setMessage(data.message);
   
             // Redirect to the profile page after successful sign in
             navigateTo('/profile');
           }  
+          else{
+            setMessage("Invalid username or password")
+          }
         }
 
       } catch (error) {
