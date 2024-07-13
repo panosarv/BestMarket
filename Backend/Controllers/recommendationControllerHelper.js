@@ -58,7 +58,6 @@ export function formatSupermarketData(supermarkets,weather,meansOfTransport){
       meansOfTransportCode=4;
     }
     const formattedSupermarkets = supermarkets.map((item) => {
-        
         return {
             name: item.name,
             timeOfDay: dateNow,
@@ -66,6 +65,7 @@ export function formatSupermarketData(supermarkets,weather,meansOfTransport){
             weatherCondition: weatherConditionCode,
             meansOfTransport: meansOfTransportCode,
             cost: item.cost,
+            rating: item.rating
         }
         
     });

@@ -22,9 +22,9 @@ def predict():
 
     # Create a DataFrame with the cost and distance values for each pair, along with the weather and transport
     df = pd.DataFrame(data)
-    df.rename(columns={'name': 'supermarketId', 'distance': 'Distance', 'weatherCondition': 'WeatherCondition', 'meansOfTransport': 'MeansOfTransport', 'cost': 'Cost','timeOfDay':'TimeOfDay'}, inplace=True)
+    df.rename(columns={'name': 'supermarketId', 'distance': 'Distance', 'weatherCondition': 'WeatherCondition', 'meansOfTransport': 'MeansOfTransport', 'cost': 'Cost','timeOfDay':'TimeOfDay','rating':'Rating'}, inplace=True)
     print('df-->',df)
-    X = df[[ 'Distance', 'Cost', 'MeansOfTransport','WeatherCondition','TimeOfDay']].astype('float32')
+    X = df[[ 'Distance', 'Cost', 'MeansOfTransport','WeatherCondition','TimeOfDay','Rating']].astype('float32')
     print('X-->',X)
     y_pred = model.predict(X)
     print('y_pred-->',y_pred)
