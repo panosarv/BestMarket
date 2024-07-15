@@ -58,6 +58,7 @@
   
   .option-item:hover {
     background-color: var(--mainColorL);
+    color:white;
   }
   
   .back-button {
