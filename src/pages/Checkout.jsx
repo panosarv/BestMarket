@@ -164,7 +164,7 @@ function Checkout() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${localStorage.getItem("accesstoken")}`,
+            Authorization: `${sessionStorage.getItem("accesstoken")}`,
           },
           body: JSON.stringify({
             user_location: location,

@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react"
 
 
 const isUserLoggedIn = () => {
-    const token = localStorage.getItem('accesstoken');
+    const token = sessionStorage.getItem('accesstoken');
     return !!token;
     }
     
@@ -21,12 +21,12 @@ function ShoppingCart({isOpen}){
     const handleClick = async () => {
         setIsLoading(true);
         setSearchButtonClassName('disabled-save-button');
-        console.log('Authorization', `${localStorage.getItem('accesstoken')}`);
+        console.log('Authorization', `${sessionStorage.getItem('accesstoken')}`);
         const response = await fetch('https://bestmarket-server.onrender.com/api/saveCart', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-access-token': `${localStorage.getItem('accesstoken')}`,
+            'x-access-token': `${sessionStorage.getItem('accesstoken')}`,
           },
           body: JSON.stringify({
             cart: cartItems,

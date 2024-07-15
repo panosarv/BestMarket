@@ -93,7 +93,7 @@
           
           if(response.ok){
             const data = await response.json();
-            localStorage.setItem('accesstoken', data.accesstoken);
+            sessionStorage.setItem('accesstoken', data.accesstoken);
             setMessage(data.message);
   
             // Redirect to the profile page after successful sign in
@@ -122,7 +122,7 @@
       
 
       const data = await response.json();
-      localStorage.setItem('accesstoken', data.accesstoken);
+      sessionStorage.setItem('accesstoken', data.accesstoken);
       setMessage(data.message);
 
       // Redirect to the profile page after successful sign in
