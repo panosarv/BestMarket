@@ -138,43 +138,55 @@
 .checkout-container-disappear{
   display: none;
 }
+
 @media screen and (max-width: 768px) {
   .checkout-container {
     flex-direction: column;
   }
+
   .supermarket-recommendation-container {
     flex-direction: column;
   }
+
   .recommendation-container {
     width: 100%;
     margin-top: 2.5em;
   }
+
   .supermarket-cards-container {
     width: 100%;
   }
+
   .radio-container,
   .form-container,
   .cart-container {
     margin-top: 20px;
   }
+
   .radio-container,
   .form-container,
   .cart-container {
     margin-right: 0;
   }
+
   .radio-container {
     margin-right: 0;
   }
+
   .form-container {
     margin-right: 0;
   }
+
   .cart-container {
     margin-right: 0;
   }
-  .map-container{
-    width:90vw;
+
+  .map-container {
+    width: calc(100% - 20px); /* Ensure some margin */
+    margin: 10px;
   }
 }
+
 
 .download-button {
   background-color: var(--mainColorL);
@@ -194,4 +206,6 @@
 .download-button i {
   margin-right: 8px;
 }
+
+
 

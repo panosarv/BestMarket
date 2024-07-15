@@ -120,7 +120,18 @@ const Help = () => {
         </div>
         {showMap && (
           <div className="map-container">
-            <MapContainer center={[userLocation.lat, userLocation.lng]} zoom={13} scrollWheelZoom={false}>
+            <MapContainer center={[userLocation.lat, userLocation.lng]} zoom={13} scrollWheelZoom={false}
+            sx={
+                {
+                    height: "100%",
+                    width: "100%",
+                    sm:{
+                        width:"90%",
+                        height:"90%"
+                    }
+                }
+                
+            }>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
