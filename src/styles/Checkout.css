@@ -175,3 +175,23 @@
     width:90vw;
   }
 }
+
+.download-button {
+  background-color: var(--mainColorL);
+  color: var(--textColor);
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.download-button:hover {
+  background-color: var(--mainColorD);
+}
+
+.download-button i {
+  margin-right: 8px;
+}
+

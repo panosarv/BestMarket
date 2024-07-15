@@ -11,3 +11,7 @@ exports.findByUsername = (username) => {
 exports.save = (user) => {
     return pool.query('INSERT INTO bm_user (username, password, email) VALUES ($1, $2, $3) RETURNING *', [user.username, user.password, user.email]);
 };
+
+exports.getUserById = (id) => {
+    return pool.query('SELECT * FROM bm_user WHERE id = $1', [id]);
+}

@@ -11,6 +11,13 @@ import '../styles/Profile.css';
 
 function Profile() {
   const [editMode, setEditMode] = useState(false);
+  const [userDetails, setUserDetails] = useState({
+    id: '',
+    username: '',
+    email: '',
+  });
+  const [newUsername, setNewUsername] = useState('');
+  const [newEmail, setNewEmail] = useState('');
   const [selectedCart, setSelectedCart] = useState(null);
   const [cartProducts, setCartProducts] = useState([]);
   const [draggedCart, setDraggedCart] = useState(null);
@@ -19,6 +26,73 @@ function Profile() {
   const { getItemQuantity, increaseCartQuantity, clearCart } = useShoppingCart();
   
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch user details from the server when the component mounts
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('https://bestmarket-server.onrender.com/api/getUserDetails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': sessionStorage.getItem('accesstoken'),
+          },
+        });
+        const data = await response.json();
+        console.log('dddddd',data)
+        setUserDetails(data.user);
+        setNewUsername(data.user.username);
+        setNewEmail(data.user.email);
+        
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
+    fetchUserDetails();
+    fetchCartProducts();
+  }, []);
+
+  const handleSaveClick = async () => {
+    if(newUsername === userDetails.username && newEmail === userDetails.email) {
+      setEditMode(false);
+      return
+    }
+    if(!newUsername && !newEmail) {
+      alert('No details provided');
+      return}
+    if(!newUsername){
+      alert('Username is required');
+      return
+    }
+    if(!newEmail){
+      alert('Email is required');
+      return
+    }
+    try {
+      
+      const response = await fetch('https://bestmarket-server.onrender.com/api/editUserDetails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': sessionStorage.getItem('accesstoken'),
+        },
+        body: JSON.stringify({
+          id: userDetails.id,
+          username: newUsername !== userDetails.username ? newUsername : undefined,
+          email: newEmail !== userDetails.email ? newEmail : undefined,
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setUserDetails({ ...userDetails, username: newUsername, email: newEmail });
+        setEditMode(false);
+      } else {
+        console.error('Error updating user details:', data.message);
+      }
+    } catch (error) {
+      console.error('Error updating user details:', error);
+    }
+  };
 
   const handleEditClick = () => {
     setEditMode(!editMode);
@@ -48,9 +122,8 @@ function Profile() {
   };
 
   const logout  = () =>{
-    localStorage.removeItem('accesstoken');
+    sessionStorage.removeItem('accesstoken');
     navigate('/account');
-
   }
 
   const updateCartInDatabase = async (updatedCart) => {
@@ -59,7 +132,7 @@ function Profile() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('accesstoken'),
+          'x-access-token': sessionStorage.getItem('accesstoken'),
         },
         body: JSON.stringify({ cart: updatedCart }),
       });
@@ -165,7 +238,7 @@ function Profile() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-access-token': localStorage.getItem('accesstoken'),
+          'x-access-token': sessionStorage.getItem('accesstoken'),
         },
       });
 
@@ -181,28 +254,41 @@ function Profile() {
     }
   };
 
-  useEffect(() => {
-    fetchCartProducts();
-  }, []);
-
   return (
     <div className='background-img'>
       <div className="profile-page">
         <Card className="mb-3">
           <Card.Header className='header-color'>Profile Information</Card.Header>
           <Card.Body>
-            <Card.Title>{editMode ? <input type="text" defaultValue="John Doe" /> : 'John Doe'}</Card.Title>
+            <Card.Title>
+              {editMode ? (
+                <input
+                  type="text"
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+                />
+              ) : (
+                userDetails.username
+              )}
+            </Card.Title>
             <Card.Text>
-              {editMode ? <input type="email" defaultValue="john.doe@example.com" /> : 'john.doe@example.com'}
+              {editMode ? (
+                <input
+                  type="email"
+                  value={newEmail}
+                  onChange={(e) => setNewEmail(e.target.value)}
+                />
+              ) : (
+                userDetails.email
+              )}
               <br />
-              {editMode ? <input type="password" defaultValue="******" /> : '******'}
             </Card.Text>
-            <Button onClick={handleEditClick}>{editMode ? 'Save' : 'Edit'}</Button>
-            <Button className='logout-btn' onClick={() => logout()}>Logout</Button>
+            <Button onClick={editMode ? handleSaveClick : handleEditClick}>
+              {editMode ? 'Save' : 'Edit'}
+            </Button>
+            <Button className='logout-btn' onClick={logout}>Logout</Button>
           </Card.Body>
         </Card>
-
-       
       </div>
       <Card className="mb-3">
         <Card.Header className='header-color-secondary'>Saved Carts</Card.Header>

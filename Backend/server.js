@@ -2,7 +2,7 @@ import express from "express";
 import ViteExpress from "vite-express";
 import cors from "cors";
 import itemRouter from './Routes/mainStoreRoutes.js';
-
+import editRoutes from './Routes/editRoutes.js';
 import authRoutes from './Routes/authRoutes.js';
 import cartRoutes from './Routes/cartRoutes.js';
 
@@ -14,5 +14,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(itemRouter);
 app.use(authRoutes);
 app.use(cartRoutes);
+app.use(editRoutes);
 
 const server = app.listen(port, () => console.log("Server is listening..."));
