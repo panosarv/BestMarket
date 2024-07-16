@@ -111,6 +111,7 @@ export async function getRecommendation(arrayOfItems, weather, meansOfTransport,
   const data = await response.json();
   const sortedRecommendation = data.sort((a, b) => b.score - a.score);
   console.log('sortedRecommendation-->',sortedRecommendation);
+  const recommendedSupermarketId = sortedRecommendation[0].supermarketId;
   const recommendationIds = sortedRecommendation.map((item) => item.supermarketId);
   const recommendationQuery = `SELECT * FROM Supermarket WHERE supermarketid IN (${recommendationIds.join(',')})`;
   const recommendationResult = (await pool.query(recommendationQuery)).rows;
@@ -132,11 +133,11 @@ export async function getRecommendation(arrayOfItems, weather, meansOfTransport,
   const nearestSupermarket = sortedRecommendationResult.sort((a, b) => a.distance - b.distance)[0].supermarketid;
   const cheapestSupermarket = sortedRecommendationResult.sort((a, b) => a.cost - b.cost)[0].supermarketid;
   console.log('sortedRecommendationResult--->',sortedRecommendationResult);
-  const recommendedSupermarket = sortedRecommendationResult[0]; 
+  const recommendedSupermarket = sortedRecommendationResult.find(sm => sm.supermarketid === recommendedSupermarketId) ; 
   const responseData = [];
   sortedRecommendationResult.map((supermarket, index) => {
     let category;
-    if (index ===  0) {
+    if (supermarket.supermarketid ===  recommendedSupermarketId) {
       category = 'recommended';
       responseData.push({
         ...supermarket,
