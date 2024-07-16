@@ -75,3 +75,22 @@
     position: relative; /* Ensure positioning context for the button */
   }
   
+  /* Ensure the chat fills the whole screen width on mobile */
+@media screen and (max-width: 768px) {
+    .chat-container {
+      padding: 0;
+    }
+  
+    .chat-box {
+      width: 100%;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 10px;
+    }
+  
+    .map-container {
+      width: calc(100% - 20px); /* Ensure some margin */
+      margin: 10px;
+    }
+  }
+  

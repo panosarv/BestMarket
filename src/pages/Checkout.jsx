@@ -406,7 +406,19 @@ function Checkout() {
 
         {showMap && recommendedSupermarkets.length > 0 && (
           <div style={{ position: "relative", width: "100%" }}>
-            <MapContainer center={[recommendedSupermarkets[0].latitude, recommendedSupermarkets[0].longitude]} zoom={13} scrollWheelZoom={false} className="map-container" style={{ height: "400px", width: "100%", marginTop: "20px" }}>
+            <MapContainer
+                center={[recommendedSupermarkets[0].latitude, recommendedSupermarkets[0].longitude]}
+                zoom={13}
+                scrollWheelZoom={false}
+                className="map-container"
+                sx={{
+                  height: "400px",
+                  width: "100%",
+                  marginTop: "20px",
+                  sm: { height: "300px", width: "90%" },
+                }}
+              >
+
               <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               {showYourLocation && (
                 <Marker position={[weatherData.lat, weatherData.lng]} icon={userLocationIcon}>
