@@ -425,8 +425,8 @@ function Checkout() {
                   <Popup>You are here</Popup>
                 </Marker>
               )}
-              {showRecommendedSupermarket && (
-                <Marker position={[recommendedSupermarkets[0].latitude, recommendedSupermarkets[0].longitude]} icon={recommendedSupermarketIcon}>
+              {showRecommendedSupermarket && recommendedSupermarkets.filter((item) => item.category === 'recommended').map((supermarket) => ((
+                <Marker position={[supermarket.latitude, supermarket.longitude]} key={supermarket.supermarketid} icon={recommendedSupermarketIcon}>
                   <Popup>
                     Recommended Supermarket
                     <br />
