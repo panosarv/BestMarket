@@ -37,7 +37,7 @@ def predict():
     for i in range(len(scoresList)):
         responseData.append({'supermarketId': supermarketIdList[i], 'score': scoresList[i]})
 
-    console.log('Response ---->',responseData);
+    print('Response ---->',responseData)
     return jsonify(responseData)
     
 
