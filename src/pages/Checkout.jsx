@@ -425,17 +425,17 @@ function Checkout() {
                   <Popup>You are here</Popup>
                 </Marker>
               )}
-              {showRecommendedSupermarket && recommendedSupermarkets.filter((item) => item.category === 'recommended').map((supermarket) => ((
+              {showRecommendedSupermarket && recommendedSupermarkets.filter((item) => item.category === 'recommended').map((supermarket) => (
                 <Marker position={[supermarket.latitude, supermarket.longitude]} key={supermarket.supermarketid} icon={recommendedSupermarketIcon}>
                   <Popup>
                     Recommended Supermarket
                     <br />
-                    <Button variant="contained" color="primary" onClick={() => getDirections(recommendedSupermarkets[0].latitude, recommendedSupermarkets[0].longitude)}>
+                    <Button variant="contained" color="primary" onClick={() => getDirections(supermarket.latitude, supermarket.longitude)}>
                       Get Directions
                     </Button>
                   </Popup>
                 </Marker>
-              )}
+              ))}
               {showNearestSupermarket && recommendedSupermarkets.filter((item) => item.category === 'nearest').map((supermarket) => (
                 <Marker position={[supermarket.latitude, supermarket.longitude]} key={supermarket.supermarketid} icon={nearestSupermarketIcon}>
                   <Popup>
