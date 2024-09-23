@@ -29,6 +29,9 @@ export function formatSupermarketData(supermarkets,weather,meansOfTransport){
     let dateNow = new Date().getHours();
     dateNow = String(dateNow)+String(new Date().getMinutes());
     dateNow = Number(dateNow);
+    if(dateNow>2100||dateNow<800){
+      dateNow=800;
+    }
     let meansOfTransportCode=3;
     if(weather.toLowerCase().includes("thunder")||weather.toLowerCase().includes("storm")){
       weatherConditionCode=0;
