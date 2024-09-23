@@ -77,7 +77,9 @@
           setMessage(data.message);
   
           // Automatically sign in the user after successful registration
-          await signInUser(username, password);
+          if (response.ok) {
+            await signInUser(username, password);
+          }
         } else {
           // Sign-in logic
           const response = await fetch(`https://bestmarket-server.onrender.com/api/auth/signin`, {

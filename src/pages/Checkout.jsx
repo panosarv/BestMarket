@@ -410,7 +410,6 @@ function Checkout() {
                 center={[recommendedSupermarkets[0].latitude, recommendedSupermarkets[0].longitude]}
                 zoom={13}
                 scrollWheelZoom={false}
-                className="map-container"
                 sx={{
                   height: "400px",
                   width: "100%",
