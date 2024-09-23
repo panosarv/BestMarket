@@ -377,23 +377,7 @@ function Checkout() {
                         <Rating name="read-only" value={supermarket.rating} readOnly precision={0.1} />
                       </div>
                     </div>
-                    <Popover id={`popover-${supermarket.category}`} open={Boolean(anchorEl[supermarket.category])} anchorEl={anchorEl[supermarket.category]} onClose={() => handleSupermarketClose(supermarket.category)} anchorOrigin={{ vertical: "mid", horizontal: "right" }}>
-                      <MapContainer className="map-container" center={[supermarket.latitude, supermarket.longitude]} zoom={13} scrollWheelZoom={false}>
-                        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <Marker position={[supermarket.latitude, supermarket.longitude]} icon={recommendedSupermarketIcon}>
-                          <Popup>
-                            {supermarket.name}
-                            <br />
-                            <Button variant="contained" color="primary" onClick={() => getDirections(supermarket.latitude, supermarket.longitude)}>
-                              Get Directions
-                            </Button>
-                          </Popup>
-                        </Marker>
-                        <Marker position={[heatmap[0].user_lat, heatmap[0].user_lng]} icon={userLocationIcon}>
-                          <Popup>Your location</Popup>
-                        </Marker>
-                      </MapContainer>
-                    </Popover>
+
                   </div>
                   <Divider style={{ width: "100%" }}>
                     <Chip label={supermarket.category} size="small" />
