@@ -26,7 +26,7 @@ function ShoppingCart({ isOpen }) {
         const cartData = cartItems.map(item => ({
             productid: item.productid,
             categoryid: item.categoryid,
-            quantity: item.quantity || 1,  // Default to 1 if quantity is not provided
+            quantity: Number(item.quantity) || 1,  // Default to 1 if quantity is not provided
         }));
 
         const response = await fetch('https://bestmarket-server.onrender.com/api/saveCart', {
