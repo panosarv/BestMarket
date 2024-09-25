@@ -58,13 +58,24 @@
   
 }
 
+.delete-all-btn{
+  background-color: var(--mainColorL);
+  border-color: var(--mainColor);
+}
+
 .select-btn{
   margin-right: 1em;
   background-color: var(--mainColorL);
   border-color: var(--mainColor);
 }
 
+.delete-btn{
+  background-color: var(--mainColorL);
+  border-color: var(--mainColor);
+}
+
 .edit-btn{
+  margin-right: 1em; 
   background-color: var(--mainColorL);
   border-color: var(--mainColor);
 }
