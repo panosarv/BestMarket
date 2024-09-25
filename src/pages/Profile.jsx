@@ -128,6 +128,7 @@ function Profile() {
 
   const updateCartInDatabase = async (updatedCart) => {
     try {
+      console.log(updatedCart);
       const response = await fetch('https://bestmarket-server.onrender.com/api/updateCart', {
         method: 'POST',
         headers: {
@@ -146,52 +147,66 @@ function Profile() {
 
   const handleDrop = (event, targetCartId) => {
     event.preventDefault();
+
+    // Ensure the dragged cart is valid and it's not the same as the target cart
     if (draggedCart !== null && draggedCart !== targetCartId) {
-      const targetCartIndex = cartProducts.findIndex((cart) => cart.cartid === targetCartId);
-      const draggedCartIndex = cartProducts.findIndex((cart) => cart.cartid === draggedCart);
-      if (targetCartIndex !== -1 && draggedCartIndex !== -1) {
-        const userConfirmationWindow = window.confirm('Are you sure you want to merge the carts?');
-        if (!userConfirmationWindow) {
-          return;
+        const targetCartIndex = cartProducts.findIndex((cart) => cart.cartid === targetCartId);
+        const draggedCartIndex = cartProducts.findIndex((cart) => cart.cartid === draggedCart);
+
+        if (targetCartIndex !== -1 && draggedCartIndex !== -1) {
+            const userConfirmationWindow = window.confirm('Are you sure you want to merge the carts?');
+            if (!userConfirmationWindow) {
+                return;
+            }
+
+            let updatedProducts = [...cartProducts[targetCartIndex].products];
+
+            // Merge products from the dragged cart
+            cartProducts[draggedCartIndex].products.forEach(draggedProduct => {
+                const existingProductIndex = updatedProducts.findIndex(product => product.productid === draggedProduct.productid);
+
+                if (existingProductIndex !== -1) {
+                    // If the product exists, update its quantity
+                    updatedProducts[existingProductIndex].quantity += draggedProduct.quantity;
+                } else {
+                    // If the product doesn't exist, add it with its current quantity
+                    updatedProducts.push({ ...draggedProduct });
+                }
+            });
+
+            // Merge categories (if required)
+            let updatedCategories = [...cartProducts[targetCartIndex].categories];
+            cartProducts[draggedCartIndex].categories.forEach(draggedCategory => {
+                const categoryExists = updatedCategories.some(category => category.categoryid === draggedCategory.categoryid);
+                if (!categoryExists) {
+                    updatedCategories.push(draggedCategory);
+                }
+            });
+
+            // Update the cart in the state with merged products and categories
+            setCartProducts(prevCartProducts => {
+                const newCartProducts = [...prevCartProducts];
+                newCartProducts[targetCartIndex] = {
+                    ...newCartProducts[targetCartIndex],
+                    products: updatedProducts,
+                    categories: updatedCategories
+                };
+                return newCartProducts;
+            });
+
+            // Create an updated cart object to send to the backend
+            const updatedCart = {
+                cartid: targetCartId,
+                categories: updatedCategories,
+                products: updatedProducts,
+            };
+
+            // Sync the merged cart with the backend database
+            updateCartInDatabase(updatedCart);
         }
-        let updatedCategories = [...cartProducts[targetCartIndex].categories];
-        let updatedProducts = [...cartProducts[targetCartIndex].products];
-        
-        cartProducts[draggedCartIndex].categories.forEach(draggedCategory => {
-          const categoryExists = updatedCategories.some(category => category.categoryid === draggedCategory.categoryid);
-          if (!categoryExists) {
-            updatedCategories.push(draggedCategory);
-          }
-        });
-
-        cartProducts[draggedCartIndex].products.forEach(draggedProduct => {
-          const productExists = updatedProducts.some(product => product.productid === draggedProduct.productid);
-          if (!productExists) {
-            updatedProducts.push(draggedProduct);
-          }
-        });
-
-        setCartProducts(prevCartProducts => {
-          const newCartProducts = [...prevCartProducts];
-          newCartProducts[targetCartIndex] = {
-            ...newCartProducts[targetCartIndex],
-            categories: updatedCategories,
-            products: updatedProducts,
-          };
-          return newCartProducts;
-        });
-
-        const updatedCart = {
-          cartid: targetCartId,
-          categories: updatedCategories,
-          products: updatedProducts,
-        };
-        updateCartInDatabase(updatedCart);
-      }
     }
-    setDraggedCart(null);
-    setIsDragging(false);
-  };
+};
+
 
   const removeItemFromCart = (cartId, item) => {
     if (editingCartId !== cartId) return; // Only allow removal from the currently edited cart
