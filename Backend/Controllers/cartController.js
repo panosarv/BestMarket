@@ -69,8 +69,13 @@ export async function saveCart(cart, user) {
 
 
 export async function deleteCart(cartId) {
-  const result = await pool.query('DELETE FROM cart_products WHERE cartid = $1', [cartId]);
+  const result = await pool.query('DELETE FROM cart WHERE cartid = $1', [cartId]);
     return result;
+}
+
+export async function deleteAllUserCarts(userId) { 
+  const result = await pool.query('DELETE FROM cart WHERE userid = $1', [userId]);
+  return result;
 }
 
 export async function updateCart(cartId, cart) {
